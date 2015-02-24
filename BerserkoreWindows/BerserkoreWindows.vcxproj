@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BEB0A2E0-E5D8-4F9F-9AD5-0610C58D0AC7}</ProjectGuid>
+    <RootNamespace>BerserkoreWindows</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\boost_1_57_0;D:\yaml-cpp\include;D:\SFML-2.2\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>D:\boost_1_57_0\stage\lib;D:\yaml-cpp\lib;D:\SFML-2.2\lib\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libyaml-cppmdd.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-system-d.lib;sfml-main-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\boost_1_57_0;D:\yaml-cpp\include;D:\SFML-2.2\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>D:\boost_1_57_0\stage\lib;D:\yaml-cpp\lib;D:\SFML-2.2\lib\Release</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="actor.cpp" />
+    <ClCompile Include="animationseq.cpp" />
+    <ClCompile Include="bomb.cpp" />
+    <ClCompile Include="commondata.cpp" />
+    <ClCompile Include="effecttext.cpp" />
+    <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="gameloop.cpp" />
+    <ClCompile Include="go.cpp" />
+    <ClCompile Include="ground.cpp" />
+    <ClCompile Include="happyhealth.cpp" />
+    <ClCompile Include="hero.cpp" />
+    <ClCompile Include="loopfactory.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="mainloopbase.cpp" />
+    <ClCompile Include="particle.cpp" />
+    <ClCompile Include="particleemitter.cpp" />
+    <ClCompile Include="pubsub.cpp" />
+    <ClCompile Include="resourcemanager.cpp" />
+    <ClCompile Include="shot.cpp" />
+    <ClCompile Include="soldier.cpp" />
+    <ClCompile Include="soundstack.cpp" />
+    <ClCompile Include="textinput.cpp" />
+    <ClCompile Include="texturerectselector.cpp" />
+    <ClCompile Include="volumebar.cpp" />
+    <ClCompile Include="volumecontrol.cpp" />
+    <ClCompile Include="welcomeloop.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="actor.hpp" />
+    <ClInclude Include="animationseq.hpp" />
+    <ClInclude Include="bomb.hpp" />
+    <ClInclude Include="commondata.hpp" />
+    <ClInclude Include="cooldown.hpp" />
+    <ClInclude Include="defs.hpp" />
+    <ClInclude Include="effecttext.hpp" />
+    <ClInclude Include="enemy.hpp" />
+    <ClInclude Include="gameloop.hpp" />
+    <ClInclude Include="go.hpp" />
+    <ClInclude Include="ground.hpp" />
+    <ClInclude Include="happyhealth.hpp" />
+    <ClInclude Include="hero.hpp" />
+    <ClInclude Include="listener.hpp" />
+    <ClInclude Include="loopfactory.hpp" />
+    <ClInclude Include="mainloopbase.hpp" />
+    <ClInclude Include="particle.hpp" />
+    <ClInclude Include="particleemitter.hpp" />
+    <ClInclude Include="pubsub.hpp" />
+    <ClInclude Include="resourcemanager.hpp" />
+    <ClInclude Include="shot.hpp" />
+    <ClInclude Include="soldier.hpp" />
+    <ClInclude Include="soundstack.hpp" />
+    <ClInclude Include="textinput.hpp" />
+    <ClInclude Include="texturerectselector.hpp" />
+    <ClInclude Include="volumebar.hpp" />
+    <ClInclude Include="volumecontrol.hpp" />
+    <ClInclude Include="welcomeloop.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,149 @@
+#
+#  config.yml Berserkore's configuration/customization file.
+#
+#  if you wanna hack this around, you better make a backup of this file; srsly!
+#  why you ask? there's currently (as of 2014-01-16) no way to reset to default
+#  other than restoring the original file from an archive or original
+#  repository.
+#
+
+fullscreen: false
+#fullscreen: true
+
+#mute: true
+#skip_welcome: true
+
+screen: [1200, 800]
+#screen: [600, 400]
+map: [320, 240]
+
+go:
+  speed: 31.3
+  texture: "go.png"
+  pos_percent: [0.642, 0.16]
+  deg_inc: 232
+
+fps_limit: 60
+
+data_folder: "data/"
+main_texture: "berserkore.png"
+main_font: "Russo_One.ttf"
+particles_texture: "particles.png"
+images:
+  hero:
+    frame:
+      size: [16, 16]
+      grid: [5, 2]
+  explosive:
+    frame:
+      size: [16, 16]
+  icon: "berserkore-icon.png"
+
+sounds:
+  throw: "throw.ogg"
+  shot: "49513__jon285__405win.22050.2.ogg"
+  grenade: "186952__readeonly__cannon-boom6.ogg"
+  bomb: "35643__sandyrb__usat-bomb.ogg"
+  whistle: "whistle.ogg"
+  beep: "beoup.ogg"
+
+soldier:
+  size: [16, 16]
+  rifle_cooldown: 0.97
+  shot_speed: 76
+  shot_start_pos_offset: 3
+
+enemy:
+  fire_chance: 0.3
+  fire_start_stop_cooldown: 0.4
+
+hero:
+  #speed: 38
+  speed: 53
+  grenade_cooldown: 0.178
+  rifle_cooldown: 0.191
+  shot_speed: 357.4
+
+gravity: 328.2
+
+bombs:
+  grenade:
+    width: 43
+    depth: 18
+    ini_iy: -140
+    ini_ix: 125.4
+    ini_ix_in_movement: 182.1
+    inc_rot_max: 360
+    throw_position: [9, -8]
+  bomb:
+    chance: 0.03
+    base_every: 1.5
+    width: 86
+    depth: 58.2
+    ini_ix: 20
+    ini_iy: 0
+    ini_rot: [10, 170]
+    ini_y: -20
+
+explosion:
+  dirt:
+    ix:
+      min: -200
+      max: +200
+    iy:
+      min: -862
+      max: -100
+    ttl: 1.44
+    subrect: [1, 0]
+  blood:
+    ix:
+      min: -20
+      max: +20
+    iy:
+      min: -162
+      max: -10
+    ttl: .5
+    subrect: [2, 0]
+
+life:
+  got_shot: .4
+  regenerate: .07
+  regenerate_delay: 1.6
+  gameover_wait: 8.8 # might not need this
+
+welcome:
+  hello_image: "welcome.png"
+  font: "Russo_One.ttf"
+  size: 22
+  color: [245, 44, 0]
+  message: "Berserkore!"
+  movement_delta: 124.13
+  rotation_delta: 33.552
+  rotation_cooldown: 1.2
+
+particles:
+  presets:
+    blood:
+      ini_ix: 0
+      ini_iy: -50
+      min_rand_ix: -40
+      max_rand_ix: 40
+      min_rand_iy: -100
+      max_rand_iy: -10
+      iiy: 25.4 # omit to use `gravity`
+      ttl: 10
+      frame: [2, 0]
+
+    dirt:
+      stuff: 2
+
+game:
+  score_factor: 13.4
+
+happyhealth:
+  rate: 13.33
+
+time_left_base: 30
+
+text:
+  view: [800, 600]
