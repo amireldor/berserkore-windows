@@ -35,5 +35,5 @@ void HappyHealth::update(float dt)
 		x = 0;
 		alpha = 0;
 	}
-	this->setColor(sf::Color(0, 255, 0, alpha*255.0f));
+	this->setColor(sf::Color(0, 255, 0, (sf::Uint8)(alpha*255.0f)));
 }

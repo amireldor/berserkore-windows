@@ -58,7 +58,7 @@ void GameMainLoop::prepare()
 		(*config)["hero"]["speed"].as<float>()
 	));
 
-	data.hero->setPosition((map_width * 0.44), 0); // the Y is calculated in main loop
+	data.hero->setPosition((map_width * 0.44f), 0); // the Y is calculated in main loop
 	actors.push_back(data.hero);
 
 	happyhealth = boost::shared_ptr<HappyHealth>(new HappyHealth(
@@ -92,7 +92,7 @@ void GameMainLoop::prepare()
 	// score stuff
 	score = 0;
 	score_factor = (*config)["game"]["score_factor"].as<float>();
-	visible_score = score;
+	visible_score = (float)score;
 	score_refresh_speed = 89.f * score_factor;
 
 
@@ -103,7 +103,7 @@ void GameMainLoop::prepare()
 	actors.push_back(go);
 
 	// big red (transparent) rectangle
-	red_rectangle.setSize(sf::Vector2f(map_width, map_height));
+	red_rectangle.setSize(sf::Vector2f((float)map_width, (float)map_height));
 	calculateRedRectangleFill();
 
 	// regeneration stuff
@@ -119,7 +119,7 @@ void GameMainLoop::calculateRedRectangleFill()
 	float inv_life = 1.0f - data.hero->getLife();
 	if (inv_life < 0.f) inv_life = 0.f;
 	if (inv_life > 1.f) inv_life = 1.f;
-	red_rectangle.setFillColor(sf::Color(255, 0, 0, inv_life * 255));
+	red_rectangle.setFillColor(sf::Color(255, 0, 0, (sf::Uint8)(inv_life*255.f)));
 }
 
 void GameMainLoop::processEvent(sf::Event event)
@@ -221,13 +221,13 @@ bool GameMainLoop::update()
 		visible_score += score_refresh_speed * frameTime.asSeconds();
 		if (visible_score > score)
 		{
-			visible_score = score;
+			visible_score = (float)score;
 		}
 	} else if (visible_score > score) { // note that there's no if-case for == as it's not needed
 		// score running down
 		visible_score -= score_refresh_speed * frameTime.asSeconds();
 		if (visible_score < score) {
-			visible_score = score;
+			visible_score = (float)score;
 		}
 	}
 
@@ -361,7 +361,7 @@ void GameMainLoop::newLevel()
 
 	// create per-level stuff
 	boost::random::uniform_int_distribution<int> dist_int(0, map_width-1);
-	boost::random::uniform_real_distribution<float> dist_real(0, map_width-1);
+	boost::random::uniform_real_distribution<float> dist_real(0, map_width-1.0f);
 	enemysoldiers.clear();
 
 	// 	craters on ground
@@ -380,8 +380,8 @@ void GameMainLoop::newLevel()
 		newguy->putOnGround();
 		newguy->setTexture(*(data.resources->getTexture((*config)["main_texture"].as<std::string>())));
 		newguy->setTextureRect(main_texture_subrect_selector.rect(0, 2));
-		newguy->setOrigin(main_texture_subrect_selector.frame.x / 2,
-				main_texture_subrect_selector.frame.y / 2);
+		newguy->setOrigin(main_texture_subrect_selector.frame.x / 2.f,
+				main_texture_subrect_selector.frame.y / 2.f);
 		newguy->look(newguy->LEFT);
 		data.pubsub->subscribe("grenade:hits_ground",newguy);
 
@@ -495,14 +495,14 @@ void GameMainLoop::onGrenadeHitGround(bk::Bomb *bomb)
 	float width = bomb->getWidth();
 	float depth = bomb->getDepth() / map_height;
 
-	data.ground->crater(pos.x, width, depth);
+	data.ground->crater((unsigned int)pos.x, width, depth);
 	ground_view->updateTexture();
 
 	// reduce score a bit :( if too near to hero
 	float dist_from_hero = fabs(data.hero->getPosition().x - pos.x);
 	if (dist_from_hero < width/2.f)
 	{
-		scoreChange( -(width/2.f - dist_from_hero)*4.2f ); // FIXME: 4.2 should be in config. need to stop being lazy
+		scoreChange( -(int)((width/2.f - dist_from_hero)*4.2f) ); // FIXME: 4.2 should be in config. need to stop being lazy
 	}
 
 	// boom!
@@ -510,7 +510,7 @@ void GameMainLoop::onGrenadeHitGround(bk::Bomb *bomb)
 	// TODO Create fire!
 
 	// Some dirt flying around!
-	createExplosion(width, pos, (*config)["explosion"]["dirt"]);
+	createExplosion((unsigned int)width, pos, (*config)["explosion"]["dirt"]);
 }
 
 void GameMainLoop::onNewShot(boost::shared_ptr<Shot> shot)
@@ -521,14 +521,14 @@ void GameMainLoop::onNewShot(boost::shared_ptr<Shot> shot)
 	shot->setTexture(*(data.resources->getTexture((*config)["main_texture"].as<std::string>())));
 	shot->setTextureRect(main_texture_subrect_selector.rect(2, 3)); // TODO: this is ugly hardcoded
 	// position
-	shot->setOrigin(main_texture_subrect_selector.frame.x / 2, main_texture_subrect_selector.frame.y / 2);
+	shot->setOrigin(main_texture_subrect_selector.frame.x / 2.f, main_texture_subrect_selector.frame.y / 2.f);
 	shot->advance((*config)["soldier"]["shot_start_pos_offset"].as<float>()); // move away from the center of the shooter
 	// fly!
 	shots.push_back(shot);
 	// boom!
 	shot_soundstack.play(
 		*(data.resources->getSoundBuffer( (*config)["sounds"]["shot"].as<std::string>())),
-		rand_zero_to_one()*0.1 + 1 // FIXME this is ugly hardcoded
+		rand_zero_to_one()*0.1f + 1 // FIXME this is ugly hardcoded
 
 	);
 }
