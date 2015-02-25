@@ -44,14 +44,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\boost_1_57_0;D:\yaml-cpp\include;D:\SFML-2.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\boost_1_57_0;D:\yaml-cpp\include;D:\SFML-master\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>D:\boost_1_57_0\stage\lib;D:\yaml-cpp\lib;D:\SFML-2.2\lib\Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libyaml-cppmdd.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-audio-d.lib;sfml-system-d.lib;sfml-main-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\boost_1_57_0\stage\lib;D:\yaml-cpp\lib;D:\SFML-master\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libyaml-cppmdd.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-main-d.lib;sfml-system-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -61,7 +62,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\boost_1_57_0;D:\yaml-cpp\include;D:\SFML-2.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\boost_1_57_0;D:\yaml-cpp\include;D:\SFML-master\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -69,7 +70,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>D:\boost_1_57_0\stage\lib;D:\yaml-cpp\lib;D:\SFML-2.2\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\boost_1_57_0\stage\lib;D:\yaml-cpp\lib;D:\SFML-master\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libyaml-cppmd.lib;sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-main.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

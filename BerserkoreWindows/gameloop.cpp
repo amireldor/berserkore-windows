@@ -608,6 +608,9 @@ void GameMainLoop::endGame()
 	emitter->move(0, -(main_texture_subrect_selector.frame.y*0.3f)); // adjust blood starting position
 	actors.push_back(emitter);
 
+	bomb_soundstack.releaseAll();
+	shot_soundstack.releaseAll();
+
 	// notify others that this game loop is considered finished
 	//pubsub->publish("loop:over"); // no sir, it's not used (yet?)
 }

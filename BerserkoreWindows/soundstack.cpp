@@ -34,8 +34,13 @@ void SoundStack::play(const sf::SoundBuffer& buffer, float pitch, float volume)
 		}
 	}
 
-	sound_deque.push_back(sf::Sound(buffer));
+ 	sound_deque.push_back(sf::Sound(buffer));
 	sound_deque.back().setPitch(pitch);
 	sound_deque.back().setVolume(volume);
 	sound_deque.back().play();
+}
+
+void SoundStack::releaseAll()
+{
+	sound_deque.clear();
 }

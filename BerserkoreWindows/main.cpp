@@ -115,8 +115,8 @@ int main(int argc, char *argv[])
 	bk::VolumeControl volume;
 	bk::VolumeBar volume_bar(sf::FloatRect(config["map"][0].as<float>()/2-42, 10, 84, 6));
 
-	sf::Sound volume_beep;
 	sf::SoundBuffer sound_beep_buffer;
+	sf::Sound volume_beep;
 	sound_beep_buffer.loadFromFile(config["data_folder"].as<std::string>() + config["sounds"]["beep"].as<std::string>());
 	volume_beep.setBuffer(sound_beep_buffer);
 
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
 
 		}
 
-		bool loop_continue;
+		bool loop_continue = false;
 		if (window_active)
 		{
 			loop_continue = current_loop->update();

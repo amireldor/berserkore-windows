@@ -27,6 +27,8 @@ public:
 	 */
 	void clearFront();
 
+	void releaseAll();
+
 private:
 	std::deque<sf::Sound> sound_deque;
 	/**
