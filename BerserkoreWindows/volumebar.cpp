@@ -5,8 +5,11 @@ using namespace bk;
 
 const float VolumeBar::CURRENT = -1;
 
-VolumeBar::VolumeBar(const sf::FloatRect &rect)
+VolumeBar::VolumeBar(YAML::Node *n_config, const sf::FloatRect &rect, ResourcePointer n_resource):
+	resources(n_resource)
 {
+	config = n_config;
+
 	value(CURRENT);
 
 	// setup shapes
@@ -22,6 +25,17 @@ VolumeBar::VolumeBar(const sf::FloatRect &rect)
 	foreground.setFillColor(sf::Color::Green);
 
 	alpha = 0; // start hidden
+
+	fontamir = *(resources->getFont((*config)["main_font"].as<std::string>()));
+
+	label.setFont( fontamir );
+	//*(resources->getFont((*config)["main_font"].as<std::string>()))
+//	font.loadFromFile("data/Russo_One.ttf");
+	//label.setFont(font);
+	label.setString("volume");
+	label.setColor(sf::Color(0, 100, 0));
+	label.setCharacterSize(20);
+	label.setPosition(100.f, 50.f);
 }
 
 void VolumeBar::value(float n_value)
@@ -70,6 +84,8 @@ void VolumeBar::update()
 
 void VolumeBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	target.draw(label);
+
 	if (alpha <= 0) return;
 	target.draw(background);
 	target.draw(foreground);

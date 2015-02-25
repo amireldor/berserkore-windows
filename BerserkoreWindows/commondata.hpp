@@ -6,6 +6,7 @@
 #define COMMONDATA_H
 
 #include <boost/shared_ptr.hpp>
+#include "resourcemanager.hpp"
 
 namespace bk
 {
@@ -13,7 +14,6 @@ namespace bk
 class Hero;
 class Ground;
 class PubSub;
-class ResourceManager;
 struct GameMainLoop;
 
 struct CommonGameData
@@ -21,7 +21,7 @@ struct CommonGameData
 	boost::shared_ptr<Hero> hero;
 	boost::shared_ptr<Ground> ground;
 	PubSub* pubsub;
-	boost::shared_ptr<ResourceManager> resources;
+	ResourcePointer resources;
 	boost::shared_ptr<GameMainLoop> game;
 };
 

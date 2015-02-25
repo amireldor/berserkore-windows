@@ -44,6 +44,8 @@ private:
 
 };
 
+typedef boost::shared_ptr<ResourceManager> ResourcePointer;
+
 //class ResourceException : public std::runtime_error {};
 
 }

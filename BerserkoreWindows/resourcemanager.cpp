@@ -17,6 +17,7 @@ void ResourceManager::setDataFolderWithSlash(const std::string &path)
 
 boost::shared_ptr<sf::Texture> ResourceManager::getTexture(const std::string &what)
 {
+	// FIXME, [] won't return NULL ever, use .count
 	boost::shared_ptr<sf::Texture> ret = textures[what];
 	if (ret == NULL)
 	{
@@ -31,6 +32,7 @@ boost::shared_ptr<sf::Texture> ResourceManager::getTexture(const std::string &wh
 
 boost::shared_ptr<sf::SoundBuffer> ResourceManager::getSoundBuffer(const std::string &what)
 {
+	// FIXME, [] won't return NULL ever, use .count
 	boost::shared_ptr<sf::SoundBuffer> ret = sound_buffers[what];
 	if (ret == NULL)
 	{
@@ -44,13 +46,27 @@ boost::shared_ptr<sf::SoundBuffer> ResourceManager::getSoundBuffer(const std::st
 
 boost::shared_ptr<sf::Font> ResourceManager::getFont(const std::string &what)
 {
-	boost::shared_ptr<sf::Font> ret = fonts[what];
+	if (fonts.count(what))
+	{
+		// font is found
+		return fonts[what];
+	}
+
+	// no font, create new
+	boost::shared_ptr<sf::Font> new_font(new sf::Font);
+	new_font->loadFromFile(data_folder_slash + what);
+	fonts[what] = new_font;
+	return new_font;
+
+	//^^^ still not working as expected :-(
+
+/*	boost::shared_ptr<sf::Font> ret = fonts[what];
 	if (ret == NULL)
 	{
 		ret = boost::shared_ptr<sf::Font>(new sf::Font);
 		// FIXME No error checking!
-		ret->loadFromFile(data_folder_slash + what);
+		ret->loadFromFile(data_folder_slash+ what);
 		fonts[what] = ret;
 	}
-	return ret;
+	return ret;*/
 }

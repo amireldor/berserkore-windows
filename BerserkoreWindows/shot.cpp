@@ -47,14 +47,14 @@ Shot::update()
 			shouldRemove();
 			return;
 		}
-	} catch (GroundException &e) {
+	} catch (GroundException&) {
 		// probably out of screen...
 		shouldRemove();
 		return;
 	}
 	// yay we handled ground/shot collision. continue.
 
-	const float shot_radius = data.game->main_texture_subrect_selector.frame.x/2; // TODO: move to config
+	const float shot_radius = data.game->main_texture_subrect_selector.frame.x/2.f; // TODO: move to config
 
 	// this is the estimated distnace the shot will fly in this frame
 	const float shot_distance_per_frame = getSpeed() * data.game->frameTime.asSeconds();

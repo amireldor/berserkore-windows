@@ -9,7 +9,7 @@ namespace bk
 
 struct WelcomeScreenLoop : public MainLoopBase
 {
-	WelcomeScreenLoop(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub);
+	WelcomeScreenLoop(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer);
 	void prepare();
 	void processEvent(sf::Event);
 	bool update();

@@ -31,7 +31,7 @@ Soldier::fire()
 
 		newshot->look(getDirection());
 
-		pos += sf::Vector2f(fac * (*config)["soldier"]["size"][0].as<int>() / 2, 0);
+		pos += sf::Vector2f(fac * (*config)["soldier"]["size"][0].as<int>() / 2.f, 0);
 		newshot->setPosition(pos);
 
 		newshot->speed = shot_speed;

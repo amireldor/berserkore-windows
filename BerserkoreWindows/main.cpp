@@ -86,13 +86,12 @@ int main(int argc, char *argv[])
 	// This view will scale to fit window
 	window.setView(sf::View(sf::FloatRect(
 		0, 0,
-		config["map"][0].as<unsigned int>(), // map width
-		config["map"][1].as<unsigned int>() // map height
+		(float)config["map"][0].as<unsigned int>(), // map width
+		(float)config["map"][1].as<unsigned int>() // map height
 	)));
 
 	bk::LoopFactory loop_factory;
 	bk::LoopFactory::LoopPointer current_loop;
-
 
 	std::queue<bk::LoopFactory::LoopType> loop_queue;
 	if (	!config["skip_welcome"].IsDefined() ||
@@ -104,16 +103,19 @@ int main(int argc, char *argv[])
 	loop_queue.push(loop_factory.GAME);
 	loop_queue.push(loop_factory.WELCOME);
 
+	// This is the common resources for everything. Should be passed to other objects as reference or pointer
+	bk::ResourcePointer resources(new bk::ResourceManager);
+
 	bk::ParticleEmitter::initPresets(config);
 	bk::PubSub main_pubsub;
 
-	current_loop = loop_factory.create(loop_queue.front(), &config, &window, &main_pubsub);
+	current_loop = loop_factory.create(loop_queue.front(), &config, &window, &main_pubsub, resources);
 	loop_queue.pop();
 	current_loop->prepare();
 
 	// volume stuff
 	bk::VolumeControl volume;
-	bk::VolumeBar volume_bar(sf::FloatRect(config["map"][0].as<float>()/2-42, 10, 84, 6));
+	bk::VolumeBar volume_bar(&config, sf::FloatRect(config["map"][0].as<float>()/2-42, 10, 84, 6), resources);
 
 	sf::SoundBuffer sound_beep_buffer;
 	sf::Sound volume_beep;
@@ -212,7 +214,7 @@ int main(int argc, char *argv[])
 				continue;
 			}
 
-			current_loop = loop_factory.create(loop_queue.front(), &config, &window, &main_pubsub);
+			current_loop = loop_factory.create(loop_queue.front(), &config, &window, &main_pubsub, resources);
 			loop_queue.pop();
 			current_loop->prepare();
 			continue;

@@ -5,6 +5,7 @@
 #include "mainloopbase.hpp"
 #include "gameloop.hpp"
 #include "welcomeloop.hpp"
+#include "resourcemanager.hpp"
 
 namespace bk
 {
@@ -24,7 +25,7 @@ public:
 
 	typedef boost::shared_ptr<bk::MainLoopBase> LoopPointer;
 
-	LoopPointer create(LoopType what, YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub);
+	LoopPointer create(LoopType what, YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_resource);
 
 };
 

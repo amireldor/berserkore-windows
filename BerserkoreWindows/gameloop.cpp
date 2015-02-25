@@ -4,8 +4,8 @@
 
 using namespace bk;
 
-GameMainLoop::GameMainLoop(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub):
-	MainLoopBase(n_config, n_window, n_pubsub),
+GameMainLoop::GameMainLoop(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_resource):
+	MainLoopBase(n_config, n_window, n_pubsub, n_resource),
 	shot_soundstack(4), bomb_soundstack(2)
 {
 }
@@ -65,7 +65,7 @@ void GameMainLoop::prepare()
 		data.hero.get(),
 		(*config)["happyhealth"]["rate"].as<float>()
 	));
-	happyhealth->setTexture( *(data.resources->getTexture((*config)["particles_texture"].as<std::string>())) );
+	happyhealth->setTexture( *(resources->getTexture((*config)["particles_texture"].as<std::string>())) );
 	happyhealth->setTextureRect( main_texture_subrect_selector.rect(3, 0) );
 	happyhealth->show(false);
 
@@ -81,10 +81,10 @@ void GameMainLoop::prepare()
 		(*config)["text"]["view"][1].as<float>()
 	));
 
-	text_score.setFont( *(resources->getFont( (*config)["main_font"].as<std::string>() )) );
+	text_score.setFont(*(resources->getFont((*config)["main_font"].as<std::string>())));
 	text_score.setString("Hello!");
 
-	text_level.setFont( *(resources->getFont( (*config)["main_font"].as<std::string>() )) );
+	text_level.setFont(*(resources->getFont((*config)["main_font"].as<std::string>())));
 	text_level.setCharacterSize(42);
 	text_level.setString("Hi!");
 	text_level.setPosition(10, 10); // FIXME: should be a `text_margin` in config.yml
@@ -99,7 +99,7 @@ void GameMainLoop::prepare()
 	// the Go banner
 	boost::shared_ptr<Go> go(new Go(config));
 	data.pubsub->subscribe("map:new", go);
-	go->setTexture(*data.resources->getTexture((*config)["go"]["texture"].as<std::string>()));
+	go->setTexture(*resources->getTexture((*config)["go"]["texture"].as<std::string>()));
 	actors.push_back(go);
 
 	// big red (transparent) rectangle
@@ -378,7 +378,7 @@ void GameMainLoop::newLevel()
 		boost::shared_ptr<EnemySoldier> newguy( new EnemySoldier(config, data) );
 		newguy->setPosition(x, 0);
 		newguy->putOnGround();
-		newguy->setTexture(*(data.resources->getTexture((*config)["main_texture"].as<std::string>())));
+		newguy->setTexture(*(resources->getTexture((*config)["main_texture"].as<std::string>())));
 		newguy->setTextureRect(main_texture_subrect_selector.rect(0, 2));
 		newguy->setOrigin(main_texture_subrect_selector.frame.x / 2.f,
 				main_texture_subrect_selector.frame.y / 2.f);
@@ -482,7 +482,7 @@ void GameMainLoop::newBomb()
 	data.pubsub->subscribe("map:new", bomb);
 
 	// whistle!
-	bomb_soundstack.play( *(data.resources->getSoundBuffer( (*config)["sounds"]["whistle"].as<std::string>())) );
+	bomb_soundstack.play( *(resources->getSoundBuffer( (*config)["sounds"]["whistle"].as<std::string>())) );
 
 	// add to actors list
 	actors.push_back(bomb);
@@ -506,7 +506,7 @@ void GameMainLoop::onGrenadeHitGround(bk::Bomb *bomb)
 	}
 
 	// boom!
-	bomb_soundstack.play( *(data.resources->getSoundBuffer( (*config)["sounds"][bomb->getSoundName()].as<std::string>())) );
+	bomb_soundstack.play( *(resources->getSoundBuffer( (*config)["sounds"][bomb->getSoundName()].as<std::string>())) );
 	// TODO Create fire!
 
 	// Some dirt flying around!
@@ -518,7 +518,7 @@ void GameMainLoop::onNewShot(boost::shared_ptr<Shot> shot)
 	// Setup the new shot and let it fly
 	//
 	// texture
-	shot->setTexture(*(data.resources->getTexture((*config)["main_texture"].as<std::string>())));
+	shot->setTexture(*(resources->getTexture((*config)["main_texture"].as<std::string>())));
 	shot->setTextureRect(main_texture_subrect_selector.rect(2, 3)); // TODO: this is ugly hardcoded
 	// position
 	shot->setOrigin(main_texture_subrect_selector.frame.x / 2.f, main_texture_subrect_selector.frame.y / 2.f);
@@ -527,7 +527,7 @@ void GameMainLoop::onNewShot(boost::shared_ptr<Shot> shot)
 	shots.push_back(shot);
 	// boom!
 	shot_soundstack.play(
-		*(data.resources->getSoundBuffer( (*config)["sounds"]["shot"].as<std::string>())),
+		*(resources->getSoundBuffer( (*config)["sounds"]["shot"].as<std::string>())),
 		rand_zero_to_one()*0.1f + 1 // FIXME this is ugly hardcoded
 
 	);
@@ -583,7 +583,7 @@ void GameMainLoop::createExplosion(unsigned int how_many, sf::Vector2f origin, Y
 	while (how_many--)
 	{
 		boost::shared_ptr<Particle> particle (new Particle);
-		particle->setTexture(*data.resources->getTexture((*this->config)["particles_texture"].as<std::string>()));
+		particle->setTexture(*resources->getTexture((*this->config)["particles_texture"].as<std::string>()));
 		particle->setTextureRect(main_texture_subrect_selector.rect(subrect_x, subrect_y));
 		particle->setPosition(origin);
 		particle->ix = ix_dist(this->random_gen);

@@ -118,7 +118,7 @@ void ParticleEmitter::initPresets(const YAML::Node &config)
 
 			presets[name] = params;
 		}
-		catch (YAML::Exception & e)
+		catch (YAML::Exception&)
 		{
 			// ignore
 		}

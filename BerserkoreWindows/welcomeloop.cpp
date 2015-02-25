@@ -2,8 +2,8 @@
 
 using namespace bk;
 
-WelcomeScreenLoop::WelcomeScreenLoop(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub):
-	MainLoopBase(n_config, n_window, n_pubsub),
+WelcomeScreenLoop::WelcomeScreenLoop(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_resource) :
+	MainLoopBase(n_config, n_window, n_pubsub, n_resource),
 	keep_going(true)
 {
 }

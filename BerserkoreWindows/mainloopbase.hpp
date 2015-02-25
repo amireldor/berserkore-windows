@@ -18,7 +18,7 @@ class PubSub;
 
 struct MainLoopBase
 {
-	MainLoopBase(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub);
+	MainLoopBase(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_resource);
 
 	virtual void prepare(); // you should call it if you subclass it. really.
 

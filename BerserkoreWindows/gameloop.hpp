@@ -25,7 +25,7 @@ namespace bk
 struct GameMainLoop : public MainLoopBase, public Listener,
 	public boost::enable_shared_from_this<GameMainLoop>
 {
-	GameMainLoop(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub);
+	GameMainLoop(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer);
 	virtual ~GameMainLoop();
 
 	/**
