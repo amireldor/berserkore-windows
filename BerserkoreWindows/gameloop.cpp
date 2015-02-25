@@ -65,8 +65,8 @@ void GameMainLoop::prepare()
 		data.hero.get(),
 		(*config)["happyhealth"]["rate"].as<float>()
 	));
-	happyhealth->setTexture( *(data.resources->getTexture((*config)["main_texture"].as<std::string>())) );
-	happyhealth->setTextureRect( main_texture_subrect_selector.rect(0, 0) );
+	happyhealth->setTexture( *(data.resources->getTexture((*config)["particles_texture"].as<std::string>())) );
+	happyhealth->setTextureRect( main_texture_subrect_selector.rect(3, 0) );
 	happyhealth->show(false);
 
 	level = 0;

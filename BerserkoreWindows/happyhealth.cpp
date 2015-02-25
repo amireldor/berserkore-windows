@@ -20,8 +20,8 @@ void HappyHealth::update(float dt)
 {
 	// place and tweak position
 	sf::Vector2f pos = target->getPosition();
-	pos.x -= this->getTextureRect().width*0.5;
-	pos.y -= this->getTextureRect().height*1.6;
+	pos.x -= this->getTextureRect().width*0.5f;
+	pos.y -= this->getTextureRect().height*1.6f;
 	this->setPosition(pos);
 
 	// pulsate beautifully! in GREEN!
