@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 
 	// volume stuff
 	bk::VolumeControl volume;
-	bk::VolumeBar volume_bar(&config, sf::FloatRect(config["map"][0].as<float>()/2-42, 10, 84, 6), resources);
+	bk::VolumeBar volume_bar(&config, sf::FloatRect(config["map"][0].as<float>() / 2 - 42, 10, 84, 6), resources); // TODO: move dimensions to config
 
 	sf::SoundBuffer sound_beep_buffer;
 	sf::Sound volume_beep;

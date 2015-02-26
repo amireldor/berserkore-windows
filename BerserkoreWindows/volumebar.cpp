@@ -28,9 +28,11 @@ VolumeBar::VolumeBar(YAML::Node *n_config, const sf::FloatRect &rect, ResourcePo
 
 	label.setFont(*(resources->getFont((*config)["main_font"].as<std::string>())));
 	label.setString("volume");
-	label.setColor(sf::Color(0, 100, 0));
-	label.setCharacterSize(20);
-	label.setPosition(100.f, 50.f);
+	label.setColor(sf::Color(0, 130, 0));
+	label.setCharacterSize(8); // TODO: this should move to config.yml
+	sf::FloatRect label_rect = label.getLocalBounds();
+	label.setOrigin(label_rect.width / 2.f, label_rect.height / 2.f);
+	label.setPosition(rect.left+rect.width / 2.0f, rect.top);
 }
 
 void VolumeBar::value(float n_value)
@@ -72,6 +74,9 @@ void VolumeBar::update()
 	foreground.setFillColor(foreground_color);
 	background.setFillColor(background_color);
 	background.setOutlineColor(background_color);
+	sf::Color label_color = label.getColor();
+	label_color.a = (sf::Uint8)alpha; // update alpha
+	label.setColor(label_color);
 
 	// set foreground scale
 	foreground.setScale(volume_value/100.f, 1);
@@ -79,9 +84,9 @@ void VolumeBar::update()
 
 void VolumeBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(label);
 
 	if (alpha <= 0) return;
 	target.draw(background);
 	target.draw(foreground);
+	target.draw(label);
 }
