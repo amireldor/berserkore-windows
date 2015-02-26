@@ -106,6 +106,21 @@ int main(int argc, char *argv[])
 	// This is the common resources for everything. Should be passed to other objects as reference or pointer
 	bk::ResourcePointer resources(new bk::ResourceManager);
 
+	// load all resources! woohoo!!!
+	resources->setDataFolderWithSlash("data/");
+	resources->loadTexture(config["go"]["texture"].as<std::string>());
+	resources->loadTexture(config["main_texture"].as<std::string>());
+	resources->loadTexture(config["particles_texture"].as<std::string>());
+	resources->loadTexture(config["welcome"]["hello_image"].as<std::string>());
+	resources->loadSoundBuffer(config["sounds"]["throw"].as<std::string>());
+	resources->loadSoundBuffer(config["sounds"]["shot"].as<std::string>());
+	resources->loadSoundBuffer(config["sounds"]["grenade"].as<std::string>());
+	resources->loadSoundBuffer(config["sounds"]["bomb"].as<std::string>());
+	resources->loadSoundBuffer(config["sounds"]["whistle"].as<std::string>());
+	resources->loadSoundBuffer(config["sounds"]["beep"].as<std::string>());
+	resources->loadFont(config["main_font"].as<std::string>());
+	resources->loadFont(config["welcome"]["font"].as<std::string>());
+
 	bk::ParticleEmitter::initPresets(config);
 	bk::PubSub main_pubsub;
 

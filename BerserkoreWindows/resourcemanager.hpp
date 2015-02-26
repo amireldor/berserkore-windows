@@ -30,11 +30,16 @@ public:
 	void setDataFolderWithSlash(const std::string &path);
 
 	/**
-	 * Will attempt to load resource if not already loaded
-	 */
+		These won't load the texture in the lazy-load method used previousy.
+		Use loadXXXX functions.
+	*/
 	boost::shared_ptr<sf::Texture> getTexture(const std::string &what);
 	boost::shared_ptr<sf::SoundBuffer> getSoundBuffer(const std::string &what);
 	boost::shared_ptr<sf::Font> getFont(const std::string &what);
+
+	bool loadTexture(const std::string &what);
+	bool loadSoundBuffer(const std::string &what);
+	bool loadFont(const std::string &what);
 
 private:
 	std::map< std::string, boost::shared_ptr<sf::Texture> > textures;

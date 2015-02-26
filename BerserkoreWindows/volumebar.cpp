@@ -26,12 +26,7 @@ VolumeBar::VolumeBar(YAML::Node *n_config, const sf::FloatRect &rect, ResourcePo
 
 	alpha = 0; // start hidden
 
-	fontamir = *(resources->getFont((*config)["main_font"].as<std::string>()));
-
-	label.setFont( fontamir );
-	//*(resources->getFont((*config)["main_font"].as<std::string>()))
-//	font.loadFromFile("data/Russo_One.ttf");
-	//label.setFont(font);
+	label.setFont(*(resources->getFont((*config)["main_font"].as<std::string>())));
 	label.setString("volume");
 	label.setColor(sf::Color(0, 100, 0));
 	label.setCharacterSize(20);

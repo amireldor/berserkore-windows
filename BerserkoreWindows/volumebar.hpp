@@ -21,7 +21,6 @@ public:
 	void update(); // update the shapes so they scale right, and stuff
 	
 	ResourcePointer resources;
-	sf::Font fontamir;
 
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const;

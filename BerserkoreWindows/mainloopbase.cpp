@@ -24,6 +24,4 @@ void MainLoopBase::prepare()
 		(*config)["images"]["hero"]["frame"]["size"][0].as<unsigned int>(),
 		(*config)["images"]["hero"]["frame"]["size"][1].as<unsigned int>()
 	);
-	resources = boost::shared_ptr<ResourceManager>(new ResourceManager);
-	resources->setDataFolderWithSlash((*config)["data_folder"].as<std::string>());
 }
