@@ -24,27 +24,70 @@
 namespace bk
 {
 
+// template for SFML resource loader (uses their ->loadFromFile
+template <class Resource>
+class ResourceLoader
+{
+public:
+	ResourceLoader();
+
+	boost::shared_ptr<Resource> getResource(const std::string &what);
+	bool loadResource(const std::string &data_dir, const std::string &what);
+
+private:
+	std::map< std::string, boost::shared_ptr<Resource> > data;
+};
+
+template <class Resource>
+boost::shared_ptr<Resource> ResourceLoader<Resource>::getResource(const std::string &what)
+{
+	return data[what];
+}
+
+template <class Resource>
+ResourceLoader<Resource>::ResourceLoader()
+{
+}
+
+template <class Resource>
+bool ResourceLoader<Resource>::loadResource(const std::string &data_dir, const std::string &what)
+{
+	// make sure data_dir ends with '/'
+	std::string correct_data_dir = data_dir;
+	if (correct_data_dir.back() != '/') correct_data_dir = data_dir + "/";
+
+	if (!data.count(what))
+	{
+		boost::shared_ptr<Resource> item(new Resource);
+		if (item->loadFromFile(correct_data_dir + what))
+		{
+			data[what] = item;
+			return true;
+		}
+		return false; // failed loading
+	}
+	return true; // already loaded
+}
+
+// contains all resource loaders
 class ResourceManager
 {
 public:
 	void setDataFolderWithSlash(const std::string &path);
 
-	/**
-		These won't load the texture in the lazy-load method used previousy.
-		Use loadXXXX functions.
-	*/
-	boost::shared_ptr<sf::Texture> getTexture(const std::string &what);
-	boost::shared_ptr<sf::SoundBuffer> getSoundBuffer(const std::string &what);
-	boost::shared_ptr<sf::Font> getFont(const std::string &what);
-
 	bool loadTexture(const std::string &what);
 	bool loadSoundBuffer(const std::string &what);
 	bool loadFont(const std::string &what);
 
+	boost::shared_ptr<sf::Texture> getTexture(const std::string &what);
+	boost::shared_ptr<sf::SoundBuffer> getSoundBuffer(const std::string &what);
+	boost::shared_ptr<sf::Font> getFont(const std::string &what);
+
 private:
-	std::map< std::string, boost::shared_ptr<sf::Texture> > textures;
-	std::map< std::string, boost::shared_ptr<sf::SoundBuffer> > sound_buffers;
-	std::map< std::string, boost::shared_ptr<sf::Font> > fonts;
+	ResourceLoader<sf::Texture> textureLoader;
+	ResourceLoader<sf::SoundBuffer> soundBufferLoader;
+	ResourceLoader<sf::Font> fontLoader;
+
 	std::string data_folder_slash;
 
 };
