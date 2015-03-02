@@ -147,3 +147,30 @@ time_left_base: 30
 
 text:
   view: [800, 600]
+
+
+tutorial:
+  - |
+    "Hello. I am tutorial text. Toggle me with 'h'.
+    Use the arrow keys to move, spacebar to shoot.
+    Enter will throw a grenade (which reduces points!)
+    You can control volume with +/- or toggle mute with S or M."
+  - |
+    "The enemies are red. Kill them. As you progess more enemies
+    will appear and bombs will fall on your head."
+  - |
+    "If you get hurt, well, you suck. But you can always wait
+    somewhere safe and recover slowly - Just like in Call of Duty!
+    (...or was it Battlefield? or both???)"
+  - |
+    "So, your main goal is to gain as much points as you can.
+    Note though, that your score is not recorded anywhere."
+  - |
+    "Tip: Start shooting at the right edge of the screen, before
+    entering the next level. This will probably kill enemies
+    that stand in the beginning of the next level. To war!"
+  - |
+    "Tip: Throwing grenades while moving will throw them farther.
+    But I guess you were doing so already."
+  - |
+    "Tip: Think you are mister commando!"

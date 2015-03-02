@@ -19,8 +19,8 @@ Bomb::Bomb(YAML::Node *config, CommonGameData data,
 	setTexture(*data.resources->getTexture((*config)["main_texture"].as<std::string>()));
 	setTextureRect(data.game->main_texture_subrect_selector.rect(textureFrame));
 	// set origin
-	setOrigin(data.game->main_texture_subrect_selector.frame.x / 2,
-		data.game->main_texture_subrect_selector.frame.y / 2);
+	setOrigin((float)data.game->main_texture_subrect_selector.frame.x / 2,
+		(float)data.game->main_texture_subrect_selector.frame.y / 2);
 
 	ix = inc_x;
 	iy = ini_inc_y;
@@ -44,7 +44,7 @@ Bomb::update()
 	}
 	else
 	{
-		unsigned int death_height = (*data.ground)[static_cast<unsigned int>(pos.x)] * getMapHeight();
+		unsigned int death_height = (unsigned int)( (*data.ground)[static_cast<unsigned int>(pos.x)] * getMapHeight() );
 		if (pos.y >= death_height)
 		{
 			// we hit the ground!

@@ -94,6 +94,9 @@ private:
 	float score_refresh_speed; // how many points we can 'move' per second in `visible_score`
 	EffectText text_score;
 	EffectText text_level;
+	sf::Text text_tutorial;
+	unsigned int tutorial_max_level;
+	bool tutorial_show;
 
 	void glowScore(const sf::Color&);
 

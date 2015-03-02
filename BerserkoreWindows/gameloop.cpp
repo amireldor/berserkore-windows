@@ -89,6 +89,13 @@ void GameMainLoop::prepare()
 	text_level.setString("Hi!");
 	text_level.setPosition(10, 10); // FIXME: should be a `text_margin` in config.yml
 
+	text_tutorial.setFont(*(resources->getFont((*config)["main_font"].as<std::string>())));
+	text_tutorial.setCharacterSize(14);
+	text_tutorial.setPosition(10, 64);
+	tutorial_show = true;
+	tutorial_max_level = (*config)["tutorial"].size();
+	text_tutorial.setString((*config)["tutorial"][level].IsDefined() ? (*config)["tutorial"][level].as<std::string>() : "");
+
 	// score stuff
 	score = 0;
 	score_factor = (*config)["game"]["score_factor"].as<float>();
@@ -126,6 +133,8 @@ void GameMainLoop::processEvent(sf::Event event)
 {
 	if (event.type == sf::Event::KeyPressed)
 	{
+		// hello. welcome to the ugliest if-else in the universe.
+		// this is so silly and i don't know why i did that, but i'm zorem.
 		if (event.key.code == sf::Keyboard::Return)
 		{
 			data.hero->try_throw_grenade();
@@ -134,6 +143,9 @@ void GameMainLoop::processEvent(sf::Event event)
 		else if (event.key.code == sf::Keyboard::Escape && data.hero->isDead()) 
 		{
 			please_end_loop = true;
+		}
+		else if (event.key.code == sf::Keyboard::H) {
+			tutorial_show = !tutorial_show;
 		}
 
 	} else if (event.type == sf::Event::TextEntered)
@@ -275,6 +287,7 @@ void GameMainLoop::draw()
 	window->setView(view_for_text);
 	window->draw(text_level);
 	window->draw(text_score);
+	if (tutorial_show &&  level < tutorial_max_level) window->draw(text_tutorial);
 	window->setView(orig_view);
 
 	// red rectangle
@@ -353,6 +366,11 @@ void GameMainLoop::newLevel()
 	text_level.setColor(sf::Color(92, 255, 64)); // FIXME: be in config.yml someday
 	EffectBasePointer the_effect(new ColorChange(&text_level, 1.2f, orig_color));
 	text_level.addEffect(the_effect);
+
+	// do magic effects with text_tutorial
+	if (level < tutorial_max_level) {
+		text_tutorial.setString((*config)["tutorial"][level].IsDefined() ? (*config)["tutorial"][level].as<std::string>() : "");
+	}
 
 	// this will gradually be quicker according to level
 	bomb_cooldown.set_maximum(
