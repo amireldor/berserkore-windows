@@ -110,6 +110,7 @@
     <ClInclude Include="cooldown.hpp" />
     <ClInclude Include="defs.hpp" />
     <ClInclude Include="effecttext.hpp" />
+    <ClInclude Include="endloopdata.hpp" />
     <ClInclude Include="enemy.hpp" />
     <ClInclude Include="gameloop.hpp" />
     <ClInclude Include="go.hpp" />

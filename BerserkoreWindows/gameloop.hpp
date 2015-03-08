@@ -18,6 +18,8 @@
 #include "textinput.hpp"
 #include "effecttext.hpp"
 #include "happyhealth.hpp"
+#include "loopfactory.hpp"
+#include "endloopdata.hpp"
 
 namespace bk
 {

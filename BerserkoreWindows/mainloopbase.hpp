@@ -15,6 +15,7 @@ namespace bk
 {
 
 class PubSub;
+class EndLoopData;
 
 struct MainLoopBase
 {
@@ -37,6 +38,8 @@ struct MainLoopBase
 	virtual void draw() = 0;
 
 	sf::Time frameTime;
+
+	boost::shared_ptr<EndLoopData> endloopdata; // can be NULL if nothing interesting should happen
 
 protected:
 	PubSub *pubsub;

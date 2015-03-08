@@ -179,5 +179,8 @@
     <ClInclude Include="welcomeloop.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="endloopdata.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

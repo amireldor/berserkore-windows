@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 		loop_queue.push(loop_factory.WELCOME);
 	}
 	loop_queue.push(loop_factory.GAME);
-	loop_queue.push(loop_factory.WELCOME);
+	//loop_queue.push(loop_factory.WELCOME);
 
 	// This is the common resources for everything. Should be passed to other objects as reference or pointer
 	bk::ResourcePointer resources(new bk::ResourceManager);

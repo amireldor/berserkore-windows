@@ -631,6 +631,9 @@ void GameMainLoop::endGame()
 
 	// notify others that this game loop is considered finished
 	//pubsub->publish("loop:over"); // no sir, it's not used (yet?)
+
+	endloopdata = boost::shared_ptr<EndLoopData>(new EndLoopData);
+	endloopdata->next_loop = loop_factory.WELCOME;
 }
 
 void GameMainLoop::glowScore(const sf::Color& glow_color)

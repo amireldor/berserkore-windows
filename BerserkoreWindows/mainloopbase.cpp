@@ -19,7 +19,7 @@ float MainLoopBase::rand_zero_to_one()
 
 void MainLoopBase::prepare()
 {
-	random_gen.seed(std::time(NULL));
+	random_gen.seed((uint32_t)std::time(NULL));
 	main_texture_subrect_selector.frame = sf::Vector2u(
 		(*config)["images"]["hero"]["frame"]["size"][0].as<unsigned int>(),
 		(*config)["images"]["hero"]["frame"]["size"][1].as<unsigned int>()

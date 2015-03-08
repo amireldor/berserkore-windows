@@ -2,13 +2,14 @@
 #define LOOP_FACTORY_H
 
 #include <boost/shared_ptr.hpp>
-#include "mainloopbase.hpp"
 #include "gameloop.hpp"
 #include "welcomeloop.hpp"
 #include "resourcemanager.hpp"
 
 namespace bk
 {
+
+class MainLoopBase;
 
 class PubSub;
 
@@ -17,6 +18,7 @@ class LoopFactory
 public:
 	enum LoopType
 	{
+		NOTHING,
 		WELCOME,
 		GAME,
 		DEATH,

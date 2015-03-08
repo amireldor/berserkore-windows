@@ -1,8 +1,9 @@
 #include "loopfactory.hpp"
+#include "mainloopbase.hpp"
 
 using namespace bk;
 
-LoopFactory::LoopPointer LoopFactory::create(LoopType what, YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_resource)
+LoopFactory::LoopPointer LoopFactory::create(LoopType what, YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_1resource)
 {
 	switch(what)
 	{
