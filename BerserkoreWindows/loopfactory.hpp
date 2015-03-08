@@ -2,21 +2,21 @@
 #define LOOP_FACTORY_H
 
 #include <boost/shared_ptr.hpp>
-#include "gameloop.hpp"
-#include "welcomeloop.hpp"
+#include <SFML/Graphics.hpp>
+#include <yaml-cpp/yaml.h>
+
 #include "resourcemanager.hpp"
 
 namespace bk
 {
 
-class MainLoopBase;
-
+struct MainLoopBase;
 class PubSub;
 
 class LoopFactory
 {
 public:
-	enum LoopType
+	enum LoopType : unsigned int
 	{
 		NOTHING,
 		WELCOME,
@@ -27,7 +27,7 @@ public:
 
 	typedef boost::shared_ptr<bk::MainLoopBase> LoopPointer;
 
-	LoopPointer create(LoopType what, YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_resource);
+	static LoopPointer create(LoopType what, YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_resource);
 
 };
 

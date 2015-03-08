@@ -1,6 +1,7 @@
 #include "gameloop.hpp"
 #include "go.hpp"
 #include "particleemitter.hpp"
+#include "loopfactory.hpp"
 
 using namespace bk;
 
@@ -626,14 +627,14 @@ void GameMainLoop::endGame()
 	emitter->move(0, -(main_texture_subrect_selector.frame.y*0.3f)); // adjust blood starting position
 	actors.push_back(emitter);
 
-	bomb_soundstack.releaseAll();
-	shot_soundstack.releaseAll();
+//	bomb_soundstack.releaseAll(); // this is stupid coz sounds are created after death as well
+//	shot_soundstack.releaseAll();
 
 	// notify others that this game loop is considered finished
 	//pubsub->publish("loop:over"); // no sir, it's not used (yet?)
 
-	endloopdata = boost::shared_ptr<EndLoopData>(new EndLoopData);
-	endloopdata->next_loop = loop_factory.WELCOME;
+	next_loop = boost::shared_ptr<MainLoopBase>(LoopFactory::create(LoopFactory::GAME, config, window, pubsub, resources));
+
 }
 
 void GameMainLoop::glowScore(const sf::Color& glow_color)

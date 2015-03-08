@@ -15,7 +15,6 @@ namespace bk
 {
 
 class PubSub;
-class EndLoopData;
 
 struct MainLoopBase
 {
@@ -39,7 +38,7 @@ struct MainLoopBase
 
 	sf::Time frameTime;
 
-	boost::shared_ptr<EndLoopData> endloopdata; // can be NULL if nothing interesting should happen
+	boost::shared_ptr<MainLoopBase> next_loop;
 
 protected:
 	PubSub *pubsub;

@@ -1,9 +1,12 @@
 #include "loopfactory.hpp"
 #include "mainloopbase.hpp"
+#include "gameloop.hpp"
+#include "welcomeloop.hpp"
+//#include "resourcemanager.hpp"
 
 using namespace bk;
 
-LoopFactory::LoopPointer LoopFactory::create(LoopType what, YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_1resource)
+LoopFactory::LoopPointer LoopFactory::create(LoopType what, YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_resource)
 {
 	switch(what)
 	{

@@ -19,6 +19,7 @@ namespace po = boost::program_options;
 #include "resourcemanager.hpp"
 #include "particleemitter.hpp"
 #include "pubsub.hpp"
+#include "mainloopbase.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -32,7 +33,7 @@ int main(int argc, char *argv[])
 	desc.add_options()
 		("help", "shows stuff like this")
 		("config", po::value<std::string>(&config_file_path)->default_value("data/config.yml"), "select a specific config file")
-	;
+		;
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, desc), vm);
 	po::notify(vm);
@@ -48,11 +49,13 @@ int main(int argc, char *argv[])
 	try {
 		std::cout << "Loading config file: " << config_file_path << std::endl;
 		config = YAML::LoadFile(config_file_path); // TODO: catch exception if file does not exist
-	} catch (YAML::BadFile e)
+	}
+	catch (YAML::BadFile e)
 	{
 		std::cout << "Couln't find configuration file :(" << std::endl;
 		exit(EXIT_FAILURE);
-	} catch (YAML::ParserException e)
+	}
+	catch (YAML::ParserException e)
 	{
 		std::cout << "Bad configuration" << std::endl;
 		std::cout << e.what() << std::endl;
@@ -69,12 +72,12 @@ int main(int argc, char *argv[])
 
 	sf::RenderWindow window(
 		sf::VideoMode(
-			config["screen"][0].as<unsigned int>(),
-			config["screen"][1].as<unsigned int>()
+		config["screen"][0].as<unsigned int>(),
+		config["screen"][1].as<unsigned int>()
 		),
 		"Berserkore!",
 		window_style
-	);
+		);
 
 	window.setMouseCursorVisible(false);
 
@@ -88,19 +91,18 @@ int main(int argc, char *argv[])
 		0, 0,
 		(float)config["map"][0].as<unsigned int>(), // map width
 		(float)config["map"][1].as<unsigned int>() // map height
-	)));
+		)));
 
-	bk::LoopFactory loop_factory;
 	bk::LoopFactory::LoopPointer current_loop;
 
 	std::queue<bk::LoopFactory::LoopType> loop_queue;
-	if (	!config["skip_welcome"].IsDefined() ||
+	if (!config["skip_welcome"].IsDefined() ||
 		(config["skip_welcome"].IsDefined() && !config["skip_welcome"].as<bool>())
-	   )
+		)
 	{
-		loop_queue.push(loop_factory.WELCOME);
+		loop_queue.push(bk::LoopFactory::WELCOME);
 	}
-	loop_queue.push(loop_factory.GAME);
+	loop_queue.push(bk::LoopFactory::GAME);
 	//loop_queue.push(loop_factory.WELCOME);
 
 	// This is the common resources for everything. Should be passed to other objects as reference or pointer
@@ -124,12 +126,11 @@ int main(int argc, char *argv[])
 	bk::ParticleEmitter::initPresets(config);
 	bk::PubSub main_pubsub;
 
-	current_loop = loop_factory.create(loop_queue.front(), &config, &window, &main_pubsub, resources);
+	current_loop = bk::LoopFactory::create(loop_queue.front(), &config, &window, &main_pubsub, resources);
 	loop_queue.pop();
 	current_loop->prepare();
 
 	// volume stuff
-	bk::VolumeControl volume;
 	bk::VolumeBar volume_bar(&config, sf::FloatRect(config["map"][0].as<float>() / 2 - 42, 10, 84, 6), resources); // TODO: move dimensions to config
 
 	sf::SoundBuffer sound_beep_buffer;
@@ -142,9 +143,9 @@ int main(int argc, char *argv[])
 	{
 		if (yaml_mute.as<bool>())
 		{
-			volume.muteToggle();
+			bk::VolumeControl::muteToggle();
 		}
-	}
+	} 
 
 	// read volume from file, we save to this file later on (on clean exist [for now?])
 	fstream vol_file("bk.volume", ios::in);
@@ -184,17 +185,17 @@ int main(int argc, char *argv[])
 
 				case sf::Keyboard::M:
 				case sf::Keyboard::S:
-					volume.muteToggle();
+					bk::VolumeControl::muteToggle();
 					volume_changed = true;
 					break;
 
 				case sf::Keyboard::Equal:
-					volume.volUp();
+					bk::VolumeControl::volUp();
 					volume_changed = true;
 					break;
 
 				case sf::Keyboard::Dash:
-					volume.volDown();
+					bk::VolumeControl::volDown();
 					volume_changed = true;
 					break;
 				default:
@@ -223,13 +224,20 @@ int main(int argc, char *argv[])
 		}
 		if (!loop_continue)
 		{
+
+			if (current_loop->next_loop != NULL) {
+				current_loop = current_loop->next_loop;
+				current_loop->prepare();
+				continue;
+			}
+
 			if (loop_queue.empty())
 			{
 				window.close();
 				continue;
 			}
 
-			current_loop = loop_factory.create(loop_queue.front(), &config, &window, &main_pubsub, resources);
+			current_loop = bk::LoopFactory::create(loop_queue.front(), &config, &window, &main_pubsub, resources);
 			loop_queue.pop();
 			current_loop->prepare();
 			continue;

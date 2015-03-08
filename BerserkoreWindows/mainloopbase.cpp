@@ -8,7 +8,8 @@ MainLoopBase::MainLoopBase(YAML::Node *n_config, sf::RenderWindow *n_window, Pub
 	config(n_config),
 	window(n_window),
 	pubsub(n_pubsub),
-	resources(n_resource)
+	resources(n_resource),
+	next_loop(NULL)
 {
 }
 
