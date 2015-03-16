@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 	{
 		loop_queue.push(bk::LoopFactory::WELCOME);
 	}
-	loop_queue.push(bk::LoopFactory::DEATH);
+	loop_queue.push(bk::LoopFactory::GAME);
 	//loop_queue.push(loop_factory.WELCOME);
 
 	// This is the common resources for everything. Should be passed to other objects as reference or pointer
