@@ -1,7 +1,9 @@
 #include "deathloop.hpp"
-
+#include "loopfactory.hpp"
 
 using namespace bk;
+
+const float DeathScreenLoop::TEXT_PULSE_TIME = 0.372f; // should be in config.yml
 
 DeathScreenLoop::DeathScreenLoop(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_resource) :
 	MainLoopBase(n_config, n_window, n_pubsub, n_resource),
@@ -19,18 +21,22 @@ void DeathScreenLoop::prepare()
 	text.setFont(*resources->getFont(settings["font"].as<std::string>()));
 	text.setCharacterSize(settings["size"].as<unsigned int>());
 	text.setString(settings["message"].as<std::string>());
+
 	sf::Uint8 r, g, b;
-	r = settings["color"][0].as<unsigned int>();
-	g = settings["color"][1].as<unsigned int>();
-	b = settings["color"][2].as<unsigned int>();
-	text.setColor(sf::Color(r, g, b));
+	r = (sf::Uint8)settings["color"][0].as<unsigned int>();
+	g = (sf::Uint8)settings["color"][1].as<unsigned int>();
+	b = (sf::Uint8)settings["color"][2].as<unsigned int>();
+	color1 = sf::Color(r, g, b);
+	r = (sf::Uint8)settings["color2"][0].as<unsigned int>();
+	g = (sf::Uint8)settings["color2"][1].as<unsigned int>();
+	b = (sf::Uint8)settings["color2"][2].as<unsigned int>();
+	color2 = sf::Color(r, g, b);
+
+	text.setColor(color1);
 	sf::Vector2f world_size = window->getView().getSize();
 	sf::FloatRect rect = text.getLocalBounds();
 	text.setOrigin(rect.width, rect.height);
 	text.setPosition(world_size.x - 20, world_size.y - 10);
-
-	EffectBasePointer awesome_effect = EffectBasePointer(new ColorChange(&text, 1.f, sf::Color(255,255,0)));
-	text.addEffect(awesome_effect);
 
 }
 
@@ -38,13 +44,37 @@ void DeathScreenLoop::processEvent(sf::Event event)
 {
 	if (event.type == sf::Event::KeyPressed)
 	{
-		keep_going = false;
+		switch (event.key.code)
+		{
+			case sf::Keyboard::T:
+				this->next_loop = LoopFactory::create(LoopFactory::GAME, config, window, pubsub, resources);
+				// lack of break intentional (keep_going=false)
+			case sf::Keyboard::Escape:
+			case sf::Keyboard::C:
+				keep_going = false;
+		}
 	}
 }
 
 bool DeathScreenLoop::update()
 {
 	text.update(frameTime.asSeconds());
+
+	if (text.countEffects() == 0)
+	{
+		sf::Color new_color;
+		if (text.getColor() == color1)
+		{
+			new_color = color2;
+		}
+		else {
+			new_color = color1;
+		}
+
+		EffectBasePointer awesome_effect = EffectBasePointer(new ColorChange(&text, TEXT_PULSE_TIME, new_color));
+		text.addEffect(awesome_effect);
+	}
+
 	return keep_going;
 }
 

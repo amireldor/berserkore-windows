@@ -633,7 +633,7 @@ void GameMainLoop::endGame()
 	// notify others that this game loop is considered finished
 	//pubsub->publish("loop:over"); // no sir, it's not used (yet?)
 
-	next_loop = boost::shared_ptr<MainLoopBase>(LoopFactory::create(LoopFactory::GAME, config, window, pubsub, resources));
+	next_loop = boost::shared_ptr<MainLoopBase>(LoopFactory::create(LoopFactory::DEATH, config, window, pubsub, resources));
 
 }
 

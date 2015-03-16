@@ -126,7 +126,8 @@ death:
   font: "Russo_One.ttf"
   size: 15
   color: [72, 10, 12]
-  message: "(C)ontinue or (S)adsad?"
+  color2: [12, 42, 201]
+  message: "(T)ryagain or (C)rysad?"
 
 particles:
   presets:

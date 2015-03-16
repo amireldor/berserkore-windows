@@ -22,6 +22,11 @@ void EffectText::addEffect(EffectBasePointer n_effect)
 	effects.push_back(n_effect);
 }
 
+unsigned int EffectText::countEffects() const
+{
+	return effects.size();
+}
+
 EffectBase::EffectBase(EffectText *n_parent, float n_time)
 {
 	parent = n_parent;

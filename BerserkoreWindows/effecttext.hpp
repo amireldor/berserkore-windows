@@ -18,6 +18,8 @@ public:
 	void addEffect(EffectBasePointer n_effect);
 	void clearEffects();
 
+	unsigned int countEffects() const;
+
 protected:
 	std::vector<EffectBasePointer> effects;
 };
