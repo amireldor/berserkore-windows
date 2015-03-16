@@ -121,6 +121,13 @@ welcome:
   rotation_delta: 33.552
   rotation_cooldown: 1.2
 
+death:
+  background: "bk-kia.png"
+  font: "Russo_One.ttf"
+  size: 15
+  color: [72, 10, 12]
+  message: "(C)ontinue or (S)adsad?"
+
 particles:
   presets:
     blood:

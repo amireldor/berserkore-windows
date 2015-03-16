@@ -79,6 +79,7 @@
     <ClCompile Include="animationseq.cpp" />
     <ClCompile Include="bomb.cpp" />
     <ClCompile Include="commondata.cpp" />
+    <ClCompile Include="deathloop.cpp" />
     <ClCompile Include="effecttext.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="gameloop.cpp" />
@@ -108,6 +109,7 @@
     <ClInclude Include="bomb.hpp" />
     <ClInclude Include="commondata.hpp" />
     <ClInclude Include="cooldown.hpp" />
+    <ClInclude Include="deathloop.hpp" />
     <ClInclude Include="defs.hpp" />
     <ClInclude Include="effecttext.hpp" />
     <ClInclude Include="enemy.hpp" />

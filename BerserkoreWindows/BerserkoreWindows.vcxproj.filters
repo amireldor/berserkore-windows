@@ -93,6 +93,9 @@
     <ClCompile Include="welcomeloop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="deathloop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defs.hpp">
@@ -177,6 +180,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="welcomeloop.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deathloop.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
