@@ -518,10 +518,13 @@ void GameMainLoop::onGrenadeHitGround(bk::Bomb *bomb)
 	ground_view->updateTexture();
 
 	// reduce score a bit :( if too near to hero
-	float dist_from_hero = fabs(data.hero->getPosition().x - pos.x);
-	if (dist_from_hero < width/2.f)
+	if (!data.hero->isDead())
 	{
-		scoreChange( -(int)((width/2.f - dist_from_hero)*4.2f) ); // FIXME: 4.2 should be in config. need to stop being lazy
+		float dist_from_hero = fabs(data.hero->getPosition().x - pos.x);
+		if (dist_from_hero < width/2.f)
+		{
+			scoreChange( -(int)((width/2.f - dist_from_hero)*4.2f) ); // FIXME: 4.2 should be in config. need to stop being lazy
+		}
 	}
 
 	// boom!
