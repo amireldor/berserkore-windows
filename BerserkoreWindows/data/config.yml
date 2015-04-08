@@ -159,10 +159,11 @@ text:
 
 tutorial:
   - |
-    Hello. I am tutorial text. Toggle me with 'h'.
+    Hello. I am tutorial text. Toggle me with 'h'. Don't do that now.
     Use the arrow keys to move, spacebar to shoot.
     Enter will throw a grenade (which reduces points!)
     You can control volume with +/- or toggle mute with S or M.
+    Next levels will teach you more about the mysteries of playing BERSERKORE.
   - |
     The enemies are red. Kill them. As you progess more enemies
     will appear and bombs will fall on your head.
