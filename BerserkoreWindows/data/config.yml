@@ -13,7 +13,7 @@ fullscreen: false
 #mute: true
 #skip_welcome: true
 
-screen: [1200, 800]
+windowed: [1200, 800]
 #screen: [600, 400]
 map: [320, 240]
 

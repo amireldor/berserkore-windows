@@ -66,16 +66,22 @@ int main(int argc, char *argv[])
 	// create the window
 	const bool fullscreen = (config["fullscreen"].as<bool>() == true);
 	sf::Uint32 window_style = sf::Style::Titlebar | sf::Style::Close;
+	sf::VideoMode video_mode;
 	if (fullscreen)
 	{
+		// use best video fullscreen mode ever
 		window_style |= sf::Style::Fullscreen;
+		video_mode = sf::VideoMode::getFullscreenModes()[0]; // bestest!
+	} else {
+		// use config settings for window size
+		video_mode = sf::VideoMode(
+			config["windowed"][0].as<unsigned int>(),
+			config["windowed"][1].as<unsigned int>()
+		);
 	}
 
 	sf::RenderWindow window(
-		sf::VideoMode(
-		config["screen"][0].as<unsigned int>(),
-		config["screen"][1].as<unsigned int>()
-		),
+		video_mode,
 		"Berserkore!",
 		window_style
 		);
