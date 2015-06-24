@@ -124,7 +124,7 @@ welcome:
   rotation_cooldown: 1.2
 
 death:
-  background: "bk-kia.png"
+  background: "bk-kia2.png"
   font: "Russo_One.ttf"
   size: 15
   color: [72, 10, 12]

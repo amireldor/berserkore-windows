@@ -141,7 +141,7 @@ void GameMainLoop::processEvent(sf::Event event)
 			data.hero->try_throw_grenade();
                         // FIXME: WHY IS THIS HERE IT MAKES NO SENSE
 		}
-		else if (event.key.code == sf::Keyboard::Escape && data.hero->isDead()) 
+		else if (event.key.code == sf::Keyboard::Escape) 
 		{
 			please_end_loop = true;
 		}
