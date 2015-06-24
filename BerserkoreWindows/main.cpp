@@ -226,39 +226,42 @@ int main(int argc, char *argv[])
 
 		}
 
-		bool loop_continue = false;
 		if (window_active)
 		{
+			bool loop_continue = false;
 			loop_continue = current_loop->update();
-		}
-		if (!loop_continue)
-		{
+			if (!loop_continue)
+			{
 
-			if (current_loop->next_loop != NULL) {
-				current_loop = current_loop->next_loop;
+				if (current_loop->next_loop != NULL) {
+					current_loop = current_loop->next_loop;
+					current_loop->prepare();
+					continue;
+				}
+
+				if (loop_queue.empty())
+				{
+					window.close();
+					continue;
+				}
+
+				current_loop = bk::LoopFactory::create(loop_queue.front(), &config, &window, &main_pubsub, resources);
+				loop_queue.pop();
 				current_loop->prepare();
 				continue;
 			}
 
-			if (loop_queue.empty())
-			{
-				window.close();
-				continue;
-			}
+			current_loop->draw();
 
-			current_loop = bk::LoopFactory::create(loop_queue.front(), &config, &window, &main_pubsub, resources);
-			loop_queue.pop();
-			current_loop->prepare();
-			continue;
+			volume_bar.value();
+			volume_bar.update(); // Note that I don't heck for `window_active` here, dunno why.
+			window.draw(volume_bar);
+
+			window.display();
+		} else {
+			// don't busy-loop the CPU, I hope
+			sf::sleep(sf::milliseconds(30));
 		}
-
-		current_loop->draw();
-
-		volume_bar.value();
-		volume_bar.update(); // Note that I don't heck for `window_active` here, dunno why.
-		window.draw(volume_bar);
-
-		window.display();
 	}
 
 	// write volume to file
