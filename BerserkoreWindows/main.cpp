@@ -5,6 +5,7 @@ using namespace std;
 #include <queue>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <yaml-cpp/yaml.h>
 
 #include <boost/shared_ptr.hpp>
@@ -162,6 +163,12 @@ int main(int argc, char *argv[])
 	}
 	vol_file.close();
 
+	// let's have some music.
+	sf::Music music;
+	music.openFromFile(config["data_folder"].as<std::string>() + config["music"].as<std::string>());
+	music.setLoop(true);
+	music.play();
+
 	// Main loop
 	sf::Clock clock;
 	bool window_active = true;
@@ -209,7 +216,7 @@ int main(int argc, char *argv[])
 					volume_bar.appear();
 					volume_beep.play();
 				}
-			} else if (event.type == sf::Event::LostFocus) {
+		} else if (event.type == sf::Event::LostFocus) {
 				window_active = false;
 			} else if (event.type == sf::Event::GainedFocus) {
 				window_active = true;
