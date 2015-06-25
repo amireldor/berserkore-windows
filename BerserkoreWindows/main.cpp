@@ -2,7 +2,6 @@
 #include <fstream>
 using namespace std;
 #include <cstdlib>
-#include <queue>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -100,18 +99,6 @@ int main(int argc, char *argv[])
 		(float)config["map"][1].as<unsigned int>() // map height
 		)));
 
-	bk::LoopFactory::LoopPointer current_loop;
-
-	std::queue<bk::LoopFactory::LoopType> loop_queue;
-	if (!config["skip_welcome"].IsDefined() ||
-		(config["skip_welcome"].IsDefined() && !config["skip_welcome"].as<bool>())
-		)
-	{
-		loop_queue.push(bk::LoopFactory::WELCOME);
-	}
-	loop_queue.push(bk::LoopFactory::GAME);
-	//loop_queue.push(loop_factory.WELCOME);
-
 	// This is the common resources for everything. Should be passed to other objects as reference or pointer
 	bk::ResourcePointer resources(new bk::ResourceManager);
 
@@ -136,8 +123,17 @@ int main(int argc, char *argv[])
 	bk::ParticleEmitter::initPresets(config);
 	bk::PubSub main_pubsub;
 
-	current_loop = bk::LoopFactory::create(loop_queue.front(), &config, &window, &main_pubsub, resources);
-	loop_queue.pop();
+	bk::LoopFactory::LoopPointer current_loop;
+	if (!config["skip_welcome"].IsDefined() ||
+		(config["skip_welcome"].IsDefined() && !config["skip_welcome"].as<bool>())
+		)
+	{
+		current_loop = bk::LoopFactory::create(bk::LoopFactory::WELCOME, &config, &window, &main_pubsub, resources);
+	}
+	if (current_loop == NULL) {
+		// we are not a welcome loop, we are nothing
+		current_loop = bk::LoopFactory::create(bk::LoopFactory::GAME, &config, &window, &main_pubsub, resources);
+	}
 	current_loop->prepare();
 
 	// volume stuff
@@ -239,22 +235,12 @@ int main(int argc, char *argv[])
 			loop_continue = current_loop->update();
 			if (!loop_continue)
 			{
-
 				if (current_loop->next_loop != NULL) {
 					current_loop = current_loop->next_loop;
 					current_loop->prepare();
 					continue;
 				}
-
-				if (loop_queue.empty())
-				{
-					window.close();
-					continue;
-				}
-
-				current_loop = bk::LoopFactory::create(loop_queue.front(), &config, &window, &main_pubsub, resources);
-				loop_queue.pop();
-				current_loop->prepare();
+				window.close();
 				continue;
 			}
 
