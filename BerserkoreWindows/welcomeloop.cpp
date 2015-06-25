@@ -1,4 +1,5 @@
 #include "welcomeloop.hpp"
+#include "loopfactory.hpp"
 
 using namespace bk;
 
@@ -36,6 +37,7 @@ void WelcomeScreenLoop::processEvent(sf::Event event)
 	if (event.type == sf::Event::KeyPressed)
 	{
 		keep_going = false;
+		this->next_loop = bk::LoopFactory::create(bk::LoopFactory::GAME, config, window, pubsub, resources);
 	}
 }
 
