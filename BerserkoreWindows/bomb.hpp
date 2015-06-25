@@ -23,12 +23,12 @@ public:
 	static const std::string soundNameBomb;
 
 	Bomb(
-		YAML::Node *config, CommonGameData data, float width, float depth,
+		YAML::Node *config, CommonGameData *data, float width, float depth,
 		float inc_x=0, float ini_inc_y=0, float inc_rot=0,
 		AnimFrame textureFrame=textureGrenade,
 		std::string n_sound_name=soundNameGrenade
 	);
-	CommonGameData data;
+	CommonGameData *data;
 
 	void update();
 

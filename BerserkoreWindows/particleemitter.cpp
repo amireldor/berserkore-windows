@@ -7,7 +7,7 @@ using namespace bk;
 
 ParticleEmitter::ParticleParametersContainer ParticleEmitter::presets;
 
-ParticleEmitter::ParticleEmitter(YAML::Node *config, CommonGameData data, ActorList* list, ParticleParameters n_params):
+ParticleEmitter::ParticleEmitter(YAML::Node *config, CommonGameData *data, ActorList* list, ParticleParameters n_params):
 	config(config), data(data), particles_list(list),
 	params(n_params)
 {
@@ -59,8 +59,8 @@ void ParticleEmitter::createParticle(const ParticleParameters &params)
 {
 	// Create particle
 	boost::shared_ptr<Particle> particle (new Particle);
-	particle->setTexture(*data.resources->getTexture((*config)["particles_texture"].as<std::string>()));
-	particle->setTextureRect(data.game->main_texture_subrect_selector.rect(params.anim_frame));
+	particle->setTexture(*data->resources->getTexture((*config)["particles_texture"].as<std::string>()));
+	particle->setTextureRect(data->game->main_texture_subrect_selector.rect(params.anim_frame));
 	particle->setPosition(getPosition());
 	// TODO set subrect
 
@@ -69,8 +69,8 @@ void ParticleEmitter::createParticle(const ParticleParameters &params)
 	boost::random::uniform_real_distribution<float>
 		iy_dist(params.min_rand_iy, params.max_rand_iy);
 
-	particle->ix = params.ini_ix + ix_dist(data.game->random_gen);
-	particle->iy = params.ini_iy + iy_dist(data.game->random_gen);
+	particle->ix = params.ini_ix + ix_dist(data->game->random_gen);
+	particle->iy = params.ini_iy + iy_dist(data->game->random_gen);
 	particle->iiy = params.iiy;
 	particle->ttl = params.ttl;
 

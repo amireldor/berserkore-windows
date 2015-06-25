@@ -14,7 +14,7 @@ class EnemySoldier : public Soldier, public Listener,
 	public boost::enable_shared_from_this<EnemySoldier>
 {
 public:
-	EnemySoldier(YAML::Node *config, CommonGameData data);
+	EnemySoldier(YAML::Node *config, CommonGameData *data);
 	virtual ~EnemySoldier();
 	void update();
 

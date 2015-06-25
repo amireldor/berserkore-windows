@@ -55,7 +55,7 @@ void GameMainLoop::prepare()
 	// Hero
 	data.hero = boost::shared_ptr<Hero>(new Hero(
 		config,
-		data,
+		&data,
 		(*config)["hero"]["speed"].as<float>()
 	));
 
@@ -120,6 +120,10 @@ void GameMainLoop::prepare()
 	// game over stuff
 	gameover_cooldown.set_maximum((*config)["life"]["gameover_wait"].as<float>());
 	gameover_cooldown.lock();
+
+	// death sound, i don't feel like lazy-loading it when dead
+	death_sound = sf::Sound( *resources->getSoundBuffer((*config)["death"]["sound"].as<std::string>()) );
+
 }
 
 void GameMainLoop::calculateRedRectangleFill()
@@ -394,7 +398,7 @@ void GameMainLoop::newLevel()
 	{
 		float x = dist_real(random_gen);
 
-		boost::shared_ptr<EnemySoldier> newguy( new EnemySoldier(config, data) );
+		boost::shared_ptr<EnemySoldier> newguy(new EnemySoldier(config, &data));
 		newguy->setPosition(x, 0);
 		newguy->putOnGround();
 		newguy->setTexture(*(resources->getTexture((*config)["main_texture"].as<std::string>())));
@@ -440,7 +444,7 @@ void GameMainLoop::newGrenade()
 	boost::shared_ptr<bk::Bomb> grenade(
 		new bk::Bomb(
 			config,
-			data,
+			&data,
 			(*config)["bombs"]["grenade"]["width"].as<float>(),
 			(*config)["bombs"]["grenade"]["depth"].as<float>(),
 			ini_ix, ini_iy, inc_rot,
@@ -477,7 +481,7 @@ void GameMainLoop::newBomb()
 	boost::shared_ptr<bk::Bomb> bomb(
 		new bk::Bomb(
 			config,
-			data,
+			&data,
 			(*config)["bombs"]["bomb"]["width"].as<float>(),
 			(*config)["bombs"]["bomb"]["depth"].as<float>(),
 			ini_ix, ini_iy, 0,
@@ -617,18 +621,22 @@ void GameMainLoop::createExplosion(unsigned int how_many, sf::Vector2f origin, Y
 	}
 }
 
+//#include <iostream>
 void GameMainLoop::endGame()
 {
 	sf::Vector2f hero_pos = data.hero->getPosition();
 	actors.remove(data.hero);
+//	std::cout << "use ocunt: " << data.hero.use_count() << std::endl;
 
 	// emit a lot of blood
-	boost::shared_ptr<ParticleEmitter> emitter(new ParticleEmitter(config, data, &particles, ParticleEmitter::preset("blood")));
+	boost::shared_ptr<ParticleEmitter> emitter(new ParticleEmitter(config, &data, &particles, ParticleEmitter::preset("blood")));
 	emitter->emitter_rate = 174.f;
 	emitter->emitter_life = 4.62f;
 	emitter->setPosition(hero_pos);
 	emitter->move(0, -(main_texture_subrect_selector.frame.y*0.3f)); // adjust blood starting position
 	actors.push_back(emitter);
+
+	death_sound.play();
 
 //	bomb_soundstack.releaseAll(); // this is stupid coz sounds are created after death as well
 //	shot_soundstack.releaseAll();

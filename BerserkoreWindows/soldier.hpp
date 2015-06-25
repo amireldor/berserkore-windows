@@ -13,9 +13,9 @@ class Soldier : public Actor
 {
 public:
 	Soldier();
-	Soldier(YAML::Node* config, CommonGameData data);
+	Soldier(YAML::Node* config, CommonGameData *data);
 
-	CommonGameData data;
+	CommonGameData *data;
 	int team;
 
 	void fire();

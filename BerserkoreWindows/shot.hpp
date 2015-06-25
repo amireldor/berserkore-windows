@@ -11,7 +11,7 @@ namespace bk
 class Shot : public Actor
 {
 public:
-	Shot(YAML::Node *config, CommonGameData data);
+	Shot(YAML::Node *config, CommonGameData *data);
 	virtual ~Shot();
 
 	int team;
@@ -29,7 +29,7 @@ public:
 	void update();
 
 	YAML::Node *config;
-	CommonGameData data;
+	CommonGameData *data;
 };
 
 }

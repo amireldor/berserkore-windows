@@ -6,7 +6,7 @@
 
 using namespace bk;
 
-Shot::Shot(YAML::Node *config, CommonGameData data)
+Shot::Shot(YAML::Node *config, CommonGameData *data)
   : config(config), data(data)
 {
 }
@@ -41,7 +41,7 @@ Shot::update()
 	 */
 	try
 	{
-		float ground_height = (*data.ground)[static_cast<unsigned int>(pos.x)] * data.game->map_height;
+		float ground_height = (*data->ground)[static_cast<unsigned int>(pos.x)] * data->game->map_height;
 		if (pos.y >= ground_height)
 		{
 			shouldRemove();
@@ -54,10 +54,10 @@ Shot::update()
 	}
 	// yay we handled ground/shot collision. continue.
 
-	const float shot_radius = data.game->main_texture_subrect_selector.frame.x/2.f; // TODO: move to config
+	const float shot_radius = data->game->main_texture_subrect_selector.frame.x / 2.f; // TODO: move to config
 
 	// this is the estimated distnace the shot will fly in this frame
-	const float shot_distance_per_frame = getSpeed() * data.game->frameTime.asSeconds();
+	const float shot_distance_per_frame = getSpeed() * data->game->frameTime.asSeconds();
 	/** if we are not in the red team, for each enemy
 	 * check if shot is colliding in the current frame (according to speed)
 	 * set erase flag if needed
@@ -68,8 +68,8 @@ Shot::update()
 	if (team != Team::RED)
 	{
 		// let's begin
-		ActorList::iterator soldier = data.game->enemysoldiers.begin();
-		while (soldier != data.game->enemysoldiers.end())
+		ActorList::iterator soldier = data->game->enemysoldiers.begin();
+		while (soldier != data->game->enemysoldiers.end())
 		{
 			sf::Vector2f soldier_pos = (*soldier)->getPosition();
 
@@ -92,7 +92,7 @@ Shot::update()
 				if (soldier_pos.x > start_x && soldier_pos.x < end_x)
 				{
 					(*soldier)->shouldRemove();
-					data.pubsub->publish("enemy:tango_down", soldier_pos);
+					data->pubsub->publish("enemy:tango_down", soldier_pos);
 					shouldRemove();
 					break;
 				}
@@ -102,10 +102,10 @@ Shot::update()
 		}
 	} else {
 		// bullet is from the RED team, check collision with Lousy Man
-		sf::Vector2f hero_pos = data.hero->getPosition();
+		sf::Vector2f hero_pos = data->hero->getPosition();
 
 		// check y
-		if (!data.hero->isDead() && abs(hero_pos.y - pos.y) <= shot_radius)
+		if (!data->hero->isDead() && abs(hero_pos.y - pos.y) <= shot_radius)
 		{
 			// in-range, now check x with shot's dynamic path
 
@@ -122,7 +122,7 @@ Shot::update()
 
 			if (hero_pos.x > start_x && hero_pos.x < end_x)
 			{
-				data.pubsub->publish("hero:got_shot");
+				data->pubsub->publish("hero:got_shot");
 				shouldRemove();
 			}
 		}

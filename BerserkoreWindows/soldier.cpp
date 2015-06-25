@@ -9,7 +9,7 @@ Soldier::Soldier()
 {
 }
 
-Soldier::Soldier(YAML::Node* config, CommonGameData data)
+Soldier::Soldier(YAML::Node* config, CommonGameData *data)
   :  data(data), config(config)
 {
 	rifle_cooldown.set_maximum((*config)["soldier"]["rifle_cooldown"].as<float>());
@@ -37,7 +37,7 @@ Soldier::fire()
 		newshot->speed = shot_speed;
 		newshot->team = team;
 
-		data.pubsub->publish("shot:new",  newshot);
+		data->pubsub->publish("shot:new",  newshot);
 
 	}
 }

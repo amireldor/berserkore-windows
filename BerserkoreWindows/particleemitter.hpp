@@ -29,7 +29,7 @@ public:
 	};
 	typedef std::map<std::string, ParticleParameters> ParticleParametersContainer;
 
-	ParticleEmitter(YAML::Node *config, CommonGameData data, ActorList* list, ParticleParameters n_params);
+	ParticleEmitter(YAML::Node *config, CommonGameData *data, ActorList* list, ParticleParameters n_params);
 	virtual ~ParticleEmitter();
 	virtual void update();
 
@@ -47,7 +47,7 @@ public:
 
 private:
 	YAML::Node *config;
-	CommonGameData data;
+	CommonGameData *data;
 	ActorList* particles_list;
 
 	ParticleParameters params;

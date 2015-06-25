@@ -88,6 +88,8 @@ private:
 	SoundStack shot_soundstack, bomb_soundstack;
 	TextInput textinput;
 
+	sf::Sound death_sound;
+
 	int score;
 	float score_factor; // read from config, adjusts the 'overall score' highness
 	float visible_score; // the score currently being viewed, as we 'run' towards the real `score`

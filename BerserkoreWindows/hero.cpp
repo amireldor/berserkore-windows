@@ -5,18 +5,18 @@
 
 using namespace bk;
 
-Hero::Hero(YAML::Node *config, CommonGameData data, float speed)
+Hero::Hero(YAML::Node *config, CommonGameData *data, float speed)
   : Soldier(config, data), life(1.0f)
 {
-	setTexture(*data.resources->getTexture((*config)["main_texture"].as<std::string>()));
-	throw_buffer = *data.resources->getSoundBuffer( (*config)["sounds"]["throw"].as<std::string>() );
+	setTexture(*data->resources->getTexture((*config)["main_texture"].as<std::string>()));
+	throw_buffer = *data->resources->getSoundBuffer((*config)["sounds"]["throw"].as<std::string>());
 
 	setupAnimation(config);
 
 	do_stand_anim();
 
-	setOrigin((float)data.game->main_texture_subrect_selector.frame.x / 2,
-		(float)data.game->main_texture_subrect_selector.frame.y / 2);
+	setOrigin((float)data->game->main_texture_subrect_selector.frame.x / 2,
+		(float)data->game->main_texture_subrect_selector.frame.y / 2);
 
 	grenade_cooldown.set_maximum((*config)["hero"]["grenade_cooldown"].as<float>());
 	rifle_cooldown.set_maximum((*config)["hero"]["rifle_cooldown"].as<float>());
@@ -28,8 +28,10 @@ Hero::Hero(YAML::Node *config, CommonGameData data, float speed)
 	this->walking = false;
 }
 
+#include <iostream>
 Hero::~Hero()
 {
+	std::cout << "hero destructor" << std::endl;
 }
 
 void
@@ -52,13 +54,13 @@ Hero::setupAnimation(YAML::Node *config)
 void
 Hero::do_stand_anim()
 {
-	setTextureRect(data.game->main_texture_subrect_selector.rect(0, 0)); // 'stand' stance
+	setTextureRect(data->game->main_texture_subrect_selector.rect(0, 0)); // 'stand' stance
 }
 
 void
 Hero::do_throw_anim()
 {
-	setTextureRect(data.game->main_texture_subrect_selector.rect(0, 1)); // 'throw grenade' stance
+	setTextureRect(data->game->main_texture_subrect_selector.rect(0, 1)); // 'throw grenade' stance
 }
 
 bool
@@ -80,7 +82,7 @@ Hero::try_throw_grenade()
 	{
 		grenade_cooldown.lock();
 		throw_sound_stack.play(throw_buffer);
-		data.pubsub->publish("grenade:new");
+		data->pubsub->publish("grenade:new");
 		return true;
 	}
 	return false;
@@ -128,7 +130,7 @@ Hero::update()
 		// Prepare texture for drawing which is probably the next step after
 		// this `update`.
 		setTextureRect(
-			data.game->main_texture_subrect_selector.rect(walk_anim_sequence.getCurrentFrame())
+			data->game->main_texture_subrect_selector.rect(walk_anim_sequence.getCurrentFrame())
 		);
 	} else {
 		do_stand_anim();
@@ -144,11 +146,11 @@ Hero::update()
 	{
 		// new map
 		position.x = 0;
-		data.pubsub->publish("map:new");
+		data->pubsub->publish("map:new");
 	}
 
 	// Put hero on the ground
-	position.y = (*data.ground)[static_cast<int>(position.x)] * getMapHeight();
+	position.y = (*data->ground)[static_cast<int>(position.x)] * getMapHeight();
 	position.y -= getTextureRect().height / 2;
 
 	// Update position
@@ -173,7 +175,7 @@ bool Hero::reduceLife(float howmuch)
 	if (life <= .0f)
 	{
 		life = .0f;
-		this->data.pubsub->publish("hero:dead");
+		this->data->pubsub->publish("hero:dead");
 	}
 	return isDead();
 }

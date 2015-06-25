@@ -5,7 +5,7 @@
 #include "bomb.hpp"
 
 using namespace bk;
-EnemySoldier::EnemySoldier(YAML::Node *config, CommonGameData data)
+EnemySoldier::EnemySoldier(YAML::Node *config, CommonGameData *data)
   : Soldier(config, data), shooting(false)
 {
 	this->team = Team::RED;
@@ -14,7 +14,7 @@ EnemySoldier::EnemySoldier(YAML::Node *config, CommonGameData data)
 	// the const time start_stop is set up later when this first rand
 	// is complete
 	fire_start_stop_cooldown.set_maximum(
-		data.game->rand_zero_to_one() * (*config)["enemy"]["fire_start_stop_cooldown"].as<float>()
+		data->game->rand_zero_to_one() * (*config)["enemy"]["fire_start_stop_cooldown"].as<float>()
 	);
 	fire_start_stop_cooldown.lock();
 }
@@ -27,7 +27,7 @@ void EnemySoldier::update()
 {
 	Soldier::update();
 
-	sf::Vector2f hero_pos = data.hero->getPosition();
+	sf::Vector2f hero_pos = data->hero->getPosition();
 
 	// put on ground
 	putOnGround();
@@ -42,7 +42,7 @@ void EnemySoldier::update()
 	}
 
 	// now fire your rifle, maybe
-	if (fire_start_stop_cooldown.update(data.game->frameTime.asSeconds()))
+	if (fire_start_stop_cooldown.update(data->game->frameTime.asSeconds()))
 	{
 		// reset its maximum, as it's not the normal value upon restart
 		// (see EnemySoldier())
@@ -50,7 +50,7 @@ void EnemySoldier::update()
 			(*config)["enemy"]["fire_start_stop_cooldown"].as<float>()
 		);
 		fire_start_stop_cooldown.lock();
-		if ((*config)["enemy"]["fire_chance"].as<float>() >= data.game->rand_zero_to_one())
+		if ((*config)["enemy"]["fire_chance"].as<float>() >= data->game->rand_zero_to_one())
 		{
 			shooting = !shooting;
 			if (shooting)
@@ -80,7 +80,7 @@ void EnemySoldier::onNotify(const std::string &message, boost::any data)
 			shouldRemove();
 			// TODO:
 			// limbs flying and screams of agony and sounds of gore
-			this->data.game->bloodExplosion(this->getPosition());
+			this->data->game->bloodExplosion(this->getPosition());
 		}
 	}
 }
@@ -88,13 +88,13 @@ void EnemySoldier::onNotify(const std::string &message, boost::any data)
 void EnemySoldier::putOnGround()
 {
 	sf::Vector2f pos = getPosition();
-	pos.y = (*data.ground)[static_cast<unsigned int>(pos.x)] * data.game->map_height;
-	pos.y -= data.game->main_texture_subrect_selector.frame.y / 2; // put exactly on ground, considering the height of my image
+	pos.y = (*data->ground)[static_cast<unsigned int>(pos.x)] * data->game->map_height;
+	pos.y -= data->game->main_texture_subrect_selector.frame.y / 2; // put exactly on ground, considering the height of my image
 	setPosition(pos);
 }
 
 void EnemySoldier::shouldRemove(bool should)
 {
-	data.pubsub->unsubscribe_from_all(shared_from_this());
+	data->pubsub->unsubscribe_from_all(shared_from_this());
 	Actor::shouldRemove(should);
 }

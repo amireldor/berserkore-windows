@@ -128,6 +128,7 @@ int main(int argc, char *argv[])
 	resources->loadSoundBuffer(config["sounds"]["bomb"].as<std::string>());
 	resources->loadSoundBuffer(config["sounds"]["whistle"].as<std::string>());
 	resources->loadSoundBuffer(config["sounds"]["beep"].as<std::string>());
+	resources->loadSoundBuffer(config["death"]["sound"].as<std::string>());
 	resources->loadFont(config["main_font"].as<std::string>());
 	resources->loadFont(config["welcome"]["font"].as<std::string>());
 	resources->loadFont(config["death"]["font"].as<std::string>());

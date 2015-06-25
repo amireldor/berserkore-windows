@@ -24,7 +24,7 @@ struct GameMainLoop;
 class Hero : public Soldier
 {
 public:
-	Hero(YAML::Node *config, CommonGameData data, float speed);
+	Hero(YAML::Node *config, CommonGameData *data, float speed);
 	virtual ~Hero();
 
 	void setupAnimation(YAML::Node *config);

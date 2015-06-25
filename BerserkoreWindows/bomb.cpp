@@ -10,17 +10,17 @@ const AnimFrame Bomb::textureGrenade = AnimFrame(1, 1);
 const std::string Bomb::soundNameBomb = "bomb";
 const std::string Bomb::soundNameGrenade = "grenade";
 
-Bomb::Bomb(YAML::Node *config, CommonGameData data,
+Bomb::Bomb(YAML::Node *config, CommonGameData *data,
 	float width, float depth, float inc_x, float ini_inc_y, float inc_rot,
 	AnimFrame textureFrame, std::string n_sound_name)
   : data(data), damage_width(width), damage_depth(depth), sound_name(n_sound_name)
 {
 	// set texture
-	setTexture(*data.resources->getTexture((*config)["main_texture"].as<std::string>()));
-	setTextureRect(data.game->main_texture_subrect_selector.rect(textureFrame));
+	setTexture(*data->resources->getTexture((*config)["main_texture"].as<std::string>()));
+	setTextureRect(data->game->main_texture_subrect_selector.rect(textureFrame));
 	// set origin
-	setOrigin((float)data.game->main_texture_subrect_selector.frame.x / 2,
-		(float)data.game->main_texture_subrect_selector.frame.y / 2);
+	setOrigin((float)data->game->main_texture_subrect_selector.frame.x / 2,
+		(float)data->game->main_texture_subrect_selector.frame.y / 2);
 
 	ix = inc_x;
 	iy = ini_inc_y;
@@ -44,11 +44,11 @@ Bomb::update()
 	}
 	else
 	{
-		unsigned int death_height = (unsigned int)( (*data.ground)[static_cast<unsigned int>(pos.x)] * getMapHeight() );
+		unsigned int death_height = (unsigned int)((*data->ground)[static_cast<unsigned int>(pos.x)] * getMapHeight());
 		if (pos.y >= death_height)
 		{
 			// we hit the ground!
-			data.pubsub->publish("grenade:hits_ground", this);
+			data->pubsub->publish("grenade:hits_ground", this);
 			should_remove = true;
 		}
 	}
