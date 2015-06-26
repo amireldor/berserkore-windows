@@ -33,10 +33,6 @@ void PubSub::publish(const std::string &message, boost::any data)
 	ListenersList::iterator iter = listeners.begin();
 	while (iter != listeners.end())
 	{
-		if ( (*iter)->not_interested ) {
-			iter = listeners.erase(iter);
-			continue;
-		}
 		(*iter)->onNotify(message, data);
 		++iter;
 	}

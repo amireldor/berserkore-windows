@@ -6,6 +6,8 @@
 
 using namespace bk;
 
+void massShouldRemove(const ActorList &);
+
 GameMainLoop::GameMainLoop(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_resource):
 	MainLoopBase(n_config, n_window, n_pubsub, n_resource),
 	shot_soundstack(4), bomb_soundstack(2)
@@ -14,6 +16,7 @@ GameMainLoop::GameMainLoop(YAML::Node *n_config, sf::RenderWindow *n_window, Pub
 
 GameMainLoop::~GameMainLoop()
 {
+	std::cout << "byebye"<<std::endl;
 }
 
 void GameMainLoop::prepare()
@@ -124,6 +127,10 @@ void GameMainLoop::prepare()
 
 	// death sound, i don't feel like lazy-loading it when dead
 	death_sound = sf::Sound( *resources->getSoundBuffer((*config)["death"]["sound"].as<std::string>()) );
+
+
+	// TODO remove temp debug
+	std::cout << "particle count at PREPARE: " << particles.size() << std::endl;
 
 }
 
@@ -360,6 +367,10 @@ void GameMainLoop::newLevel()
 {
 	data.ground->createRandom(Ground::CONTINUE);
 	// YOU! DON'T CLEAR THE `actors` YOU! THEY HAVE THE HERO INSTANCE ITSELF!
+	std::cout << "mass remove shots:" << std::endl;
+	massShouldRemove(shots);
+	std::cout << "mass remove particles:" << std::endl;
+	massShouldRemove(particles);
 	shots.clear();
 	particles.clear();
 	level++;
@@ -388,6 +399,8 @@ void GameMainLoop::newLevel()
 	// create per-level stuff
 	boost::random::uniform_int_distribution<int> dist_int(0, map_width-1);
 	boost::random::uniform_real_distribution<float> dist_real(0, map_width-1.0f);
+	std::cout << "mass remove soldiers:" << std::endl;
+	massShouldRemove(enemysoldiers);
 	enemysoldiers.clear();
 
 	// 	craters on ground
@@ -679,11 +692,22 @@ void GameMainLoop::scoreChange(int change)
 
 void GameMainLoop::cleanup()
 {
-	pubsub->clear_group(1);
+	//pubsub->clear_group(1);
 	//pubsub->clear_all();
+
+	std::cout << "actors: " << std::endl;
+	massShouldRemove(actors);
+	std::cout << "shots: " << std::endl;
+	massShouldRemove(shots);
+	std::cout << "enemy soldiers: " << std::endl;
+	massShouldRemove(enemysoldiers);
+	std::cout << "particles: " << std::endl;
+	massShouldRemove(particles);
+
 	actors.clear();
 	shots.clear();
 	enemysoldiers.clear();
+	particles.clear();
 	/*
 	ListenersList all_listeners;
 	all_listeners.insert(all_listeners.end(), enemysoldiers.begin(), enemysoldiers.end());
@@ -712,7 +736,20 @@ void GameMainLoop::cleanup()
 	actors.clear();
 	shots.clear();
 	enemysoldiers.clear();*/
-	data.hero = NULL; // it's not in actors anymore in this stage for some reason
-	pubsub->unsubscribe_from_all(shared_from_this());
 #endif
+	pubsub->unsubscribe_from_all(shared_from_this());
+	//data.hero = NULL; // why do I comment this? why does this break when hero is dead? ahh fuck it! random programming is the best!
+	data.game = NULL;
+	data.ground = NULL;
+	data.pubsub = NULL;
+	data.resources = NULL;
+}
+
+void massShouldRemove(const ActorList &actor_list)
+{
+	std::cout << "clearing smt #" << actor_list.size() << std::endl;
+	BOOST_FOREACH( boost::shared_ptr<Actor> actor, actor_list )
+	{
+		actor->shouldRemove();
+	}
 }

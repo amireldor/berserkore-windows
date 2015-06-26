@@ -40,7 +40,7 @@ Bomb::update()
 	sf::Vector2f pos = getPosition();
 	if (pos.x < 0 || pos.x >= getMapWidth())
 	{
-		should_remove = true;
+		shouldRemove();
 	}
 	else
 	{
@@ -71,7 +71,6 @@ Bomb::onNotify(const std::string &message, boost::any data)
 void Bomb::shouldRemove()
 {
 	// TODO: this is duplicated stuff. there's another actor/listener that does the same somewhere
-	//this->data->pubsub->unsubscribe_from_all(shared_from_this());
-	not_interested = true;
+	this->data->pubsub->unsubscribe_from_all(shared_from_this());
 	Actor::shouldRemove();
 }
