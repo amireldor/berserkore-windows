@@ -18,9 +18,12 @@ class PubSub
 {
 public:
 	void publish(const std::string &message, boost::any data=0);
-	void subscribe(const std::string &message, boost::shared_ptr<Listener> subscriber);
+	void subscribe(const std::string &message, boost::shared_ptr<Listener> subscriber, int group = 0);
 	void unsubscribe(const std::string &message, boost::shared_ptr<Listener> subscriber);
 	void unsubscribe_from_all(boost::shared_ptr<Listener> subscriber);
+	void clear_group(int group);
+	void clear_all();
+
 private:
 	// map of "message" to "listeners" to that message
 	ListenersMap listeners_map;

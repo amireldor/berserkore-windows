@@ -1,3 +1,4 @@
+#include <boost/foreach.hpp>
 #include "gameloop.hpp"
 #include "go.hpp"
 #include "particleemitter.hpp"
@@ -31,13 +32,13 @@ void GameMainLoop::prepare()
 	ground_view->updateTexture();
 
 	data.pubsub = MainLoopBase::pubsub;
-	data.pubsub->subscribe("map:new", shared_from_this());
-	data.pubsub->subscribe("grenade:new", shared_from_this());
-	data.pubsub->subscribe("grenade:hits_ground", shared_from_this());
-	data.pubsub->subscribe("shot:new", shared_from_this());
-	data.pubsub->subscribe("enemy:tango_down", shared_from_this());
-	data.pubsub->subscribe("hero:got_shot", shared_from_this());
-	//data.pubsub->subscribe("hero:dead", shared_from_this());
+	data.pubsub->subscribe("map:new", shared_from_this(), 1);
+	data.pubsub->subscribe("grenade:new", shared_from_this(), 1);
+	data.pubsub->subscribe("grenade:hits_ground", shared_from_this(), 1);
+	data.pubsub->subscribe("shot:new", shared_from_this(), 1);
+	data.pubsub->subscribe("enemy:tango_down", shared_from_this(), 1);
+	data.pubsub->subscribe("hero:got_shot", shared_from_this(), 1);
+	//data.pubsub->subscribe("hero:dead", shared_from_this(), 1);
 
 	please_end_loop = false;
 
@@ -106,7 +107,7 @@ void GameMainLoop::prepare()
 
 	// the Go banner
 	boost::shared_ptr<Go> go(new Go(config));
-	data.pubsub->subscribe("map:new", go);
+	data.pubsub->subscribe("map:new", go, 1);
 	go->setTexture(*resources->getTexture((*config)["go"]["texture"].as<std::string>()));
 	actors.push_back(go);
 
@@ -269,8 +270,10 @@ bool GameMainLoop::update()
 		}
 	}
 
-
-	if (please_end_loop) return false;
+	if (please_end_loop) {
+		cleanup();
+		return false;
+	}
 
 	return true;
 }
@@ -406,7 +409,7 @@ void GameMainLoop::newLevel()
 		newguy->setOrigin(main_texture_subrect_selector.frame.x / 2.f,
 				main_texture_subrect_selector.frame.y / 2.f);
 		newguy->look(newguy->LEFT);
-		data.pubsub->subscribe("grenade:hits_ground",newguy);
+		data.pubsub->subscribe("grenade:hits_ground", newguy, 1);
 
 		enemysoldiers.push_back(newguy);
 	}
@@ -461,7 +464,7 @@ void GameMainLoop::newGrenade()
 	boost::random::uniform_real_distribution<float> rotation(0.0f, 360.0f);
 	grenade->setRotation(rotation(random_gen));
 
-	data.pubsub->subscribe("map:new", grenade);
+	data.pubsub->subscribe("map:new", grenade, 1);
 
 	actors.push_back(grenade);
 }
@@ -502,7 +505,7 @@ void GameMainLoop::newBomb()
 	sf::Vector2f pos(x_dist(random_gen), (*config)["bombs"]["bomb"]["ini_y"].as<float>());
 	bomb->setPosition(pos);
 
-	data.pubsub->subscribe("map:new", bomb);
+	data.pubsub->subscribe("map:new", bomb, 1);
 
 	// whistle!
 	bomb_soundstack.play( *(resources->getSoundBuffer( (*config)["sounds"]["whistle"].as<std::string>())) );
@@ -644,6 +647,8 @@ void GameMainLoop::endGame()
 	// notify others that this game loop is considered finished
 	//pubsub->publish("loop:over"); // no sir, it's not used (yet?)
 
+	//pubsub->clear(); // remove references to enemies and everything
+
 	next_loop = boost::shared_ptr<MainLoopBase>(LoopFactory::create(LoopFactory::DEATH, config, window, pubsub, resources));
 
 }
@@ -670,4 +675,44 @@ void GameMainLoop::scoreChange(int change)
 	} else {
 		glowScore(sf::Color::Red);
 	}
+}
+
+void GameMainLoop::cleanup()
+{
+	pubsub->clear_group(1);
+	//pubsub->clear_all();
+	actors.clear();
+	shots.clear();
+	enemysoldiers.clear();
+	/*
+	ListenersList all_listeners;
+	all_listeners.insert(all_listeners.end(), enemysoldiers.begin(), enemysoldiers.end());
+	all_listeners.insert(all_listeners.end(), shots.begin(), shots.end());
+	all_listeners.insert(all_listeners.end(), bombs.begin(), bombs.end());
+	all_listeners.push_back(go_actor);
+	all_listeners.push_back(shared_from_this());
+	*/
+
+#if 0
+	// some manual cleaning
+	ActorList::iterator actor;
+	actor = actors.begin();
+	while (actor != actors.end()) {
+		actor = actors.erase(actor);
+	}
+	actor = shots.begin();
+	while (actor != shots.end()) {
+		actor = shots.erase(actor);
+	}
+	actor = enemysoldiers.begin();
+	while (actor != enemysoldiers.end()) {
+		actor = enemysoldiers.erase(actor);
+	}
+	/*
+	actors.clear();
+	shots.clear();
+	enemysoldiers.clear();*/
+	data.hero = NULL; // it's not in actors anymore in this stage for some reason
+	pubsub->unsubscribe_from_all(shared_from_this());
+#endif
 }

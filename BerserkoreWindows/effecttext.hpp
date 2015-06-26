@@ -3,7 +3,6 @@
 
 #include <boost/shared_ptr.hpp>
 #include <SFML/Graphics.hpp>
-#include "actor.hpp"
 
 namespace bk
 {

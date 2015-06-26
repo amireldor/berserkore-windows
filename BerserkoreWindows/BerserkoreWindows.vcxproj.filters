@@ -96,6 +96,9 @@
     <ClCompile Include="deathloop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="listener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defs.hpp">

@@ -38,7 +38,7 @@ struct GameMainLoop : public MainLoopBase, public Listener,
 	void processEvent(sf::Event);
 	bool update();
 	void draw();
-	//void cleanup();
+	void cleanup();
 
 	virtual void onNotify(const std::string &message, boost::any data);
 

@@ -87,6 +87,7 @@
     <ClCompile Include="ground.cpp" />
     <ClCompile Include="happyhealth.cpp" />
     <ClCompile Include="hero.cpp" />
+    <ClCompile Include="listener.cpp" />
     <ClCompile Include="loopfactory.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainloopbase.cpp" />

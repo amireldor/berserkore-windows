@@ -4,6 +4,7 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 #include <boost/any.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include "resourcemanager.hpp"
 #include "actor.hpp"
 #include "ground.hpp"
@@ -11,10 +12,12 @@
 #include "commondata.hpp"
 #include "animationseq.hpp" // for AnimFrame
 
+#include <iostream> // remove, it's debug stuff
+
 namespace bk
 {
 
-class Bomb : public Actor, public Listener
+class Bomb : public Actor, public Listener, public boost::enable_shared_from_this<Bomb>
 {
 public:
 	static const AnimFrame textureGrenade;
@@ -28,6 +31,7 @@ public:
 		AnimFrame textureFrame=textureGrenade,
 		std::string n_sound_name=soundNameGrenade
 	);
+	~Bomb() { std::cout << "bomb destructor" << std::endl; }
 	CommonGameData *data;
 
 	void update();
@@ -38,6 +42,8 @@ public:
 	float getDepth() const { return damage_depth; }
 
 	std::string getSoundName() const { return sound_name; } // FIXME I accidently C++ with normal return const& and stuff
+
+	void shouldRemove();
 
 private:
 	float damage_width, damage_depth;

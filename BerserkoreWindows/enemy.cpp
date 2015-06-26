@@ -97,6 +97,7 @@ void EnemySoldier::putOnGround()
 
 void EnemySoldier::shouldRemove(bool should)
 {
+	// TODO: DRY, dupliocated shit in bomb
 	data->pubsub->unsubscribe_from_all(shared_from_this());
 	Actor::shouldRemove(should);
 }

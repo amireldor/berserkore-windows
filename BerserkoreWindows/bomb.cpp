@@ -49,7 +49,7 @@ Bomb::update()
 		{
 			// we hit the ground!
 			data->pubsub->publish("grenade:hits_ground", this);
-			should_remove = true;
+			shouldRemove();
 		}
 	}
 }
@@ -66,4 +66,12 @@ Bomb::onNotify(const std::string &message, boost::any data)
 	{
 		shouldRemove();
 	}
+}
+
+void Bomb::shouldRemove()
+{
+	// TODO: this is duplicated stuff. there's another actor/listener that does the same somewhere
+	//this->data->pubsub->unsubscribe_from_all(shared_from_this());
+	not_interested = true;
+	Actor::shouldRemove();
 }
