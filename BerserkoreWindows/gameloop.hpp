@@ -32,7 +32,7 @@ struct GameMainLoop : public MainLoopBase, public Listener,
 	 * CommonGameData contains stuff, that we sometimes want to give Actors...
 	 * e.g... the ResourceManager! But it's ok.
 	 */
-	CommonGameData data;
+	CommonGameData *data;
 
 	void prepare();
 	void processEvent(sf::Event);

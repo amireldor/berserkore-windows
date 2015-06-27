@@ -22,31 +22,32 @@ std::cout << "cat bye" << std::endl;
 
 void GameMainLoop::prepare()
 {
-	data.game = shared_from_this();
+	data = new CommonGameData();
+	data->game = shared_from_this();
 	MainLoopBase::prepare();
 
 	map_width = (*config)["map"][0].as<unsigned int>();
 	map_height = (*config)["map"][1].as<unsigned int>();
 
 	// Create stuff and window
-	data.ground = boost::shared_ptr<Ground>(new Ground(map_width));
-	data.ground->createRandom();
+	data->ground = boost::shared_ptr<Ground>(new Ground(map_width));
+	data->ground->createRandom();
 
-	ground_view = boost::shared_ptr<GroundView>(new GroundView(data.ground.get(), map_width, map_height));
+	ground_view = boost::shared_ptr<GroundView>(new GroundView(data->ground.get(), map_width, map_height));
 	ground_view->updateTexture();
 
-	data.pubsub = MainLoopBase::pubsub;
-	data.pubsub->subscribe("map:new", shared_from_this());
-	data.pubsub->subscribe("grenade:new", shared_from_this());
-	data.pubsub->subscribe("grenade:hits_ground", shared_from_this());
-	data.pubsub->subscribe("shot:new", shared_from_this());
-	data.pubsub->subscribe("enemy:tango_down", shared_from_this());
-	data.pubsub->subscribe("hero:got_shot", shared_from_this());
-	//data.pubsub->subscribe("hero:dead", shared_from_this());
+	data->pubsub = MainLoopBase::pubsub;
+	data->pubsub->subscribe("map:new", shared_from_this());
+	data->pubsub->subscribe("grenade:new", shared_from_this());
+	data->pubsub->subscribe("grenade:hits_ground", shared_from_this());
+	data->pubsub->subscribe("shot:new", shared_from_this());
+	data->pubsub->subscribe("enemy:tango_down", shared_from_this());
+	data->pubsub->subscribe("hero:got_shot", shared_from_this());
+	//data->pubsub->subscribe("hero:dead", shared_from_this());
 
 	please_end_loop = false;
 
-	data.resources = resources; // hack hack YEAH BABY! see explanation:
+	data->resources = resources; // hack hack YEAH BABY! see explanation:
 	/**
 	 * As said in the .hpp file, we sometime need `data` in Actors or wherever dunno,
 	 * but resources is a very nice object! So the main loop has it.
@@ -58,17 +59,17 @@ void GameMainLoop::prepare()
 	Actor::setGravity((*config)["gravity"].as<float>());
 
 	// Hero
-	data.hero = boost::shared_ptr<Hero>(new Hero(
+	data->hero = boost::shared_ptr<Hero>(new Hero(
 		config,
-		&data,
+		data,
 		(*config)["hero"]["speed"].as<float>()
 	));
 
-	data.hero->setPosition((map_width * 0.44f), 0); // the Y is calculated in main loop
-	actors.push_back(data.hero);
+	data->hero->setPosition((map_width * 0.44f), 0); // the Y is calculated in main loop
+	actors.push_back(data->hero);
 
 	happyhealth = boost::shared_ptr<HappyHealth>(new HappyHealth(
-		data.hero.get(),
+		data->hero.get(),
 		(*config)["happyhealth"]["rate"].as<float>()
 	));
 	happyhealth->setTexture( *(resources->getTexture((*config)["particles_texture"].as<std::string>())) );
@@ -111,7 +112,7 @@ void GameMainLoop::prepare()
 
 	// the Go banner
 	boost::shared_ptr<Go> go(new Go(config));
-	data.pubsub->subscribe("map:new", go);
+	data->pubsub->subscribe("map:new", go);
 	go->setTexture(*resources->getTexture((*config)["go"]["texture"].as<std::string>()));
 	actors.push_back(go);
 
@@ -132,7 +133,7 @@ void GameMainLoop::prepare()
 
 void GameMainLoop::calculateRedRectangleFill()
 {
-	float inv_life = 1.0f - data.hero->getLife();
+	float inv_life = 1.0f - data->hero->getLife();
 	if (inv_life < 0.f) inv_life = 0.f;
 	if (inv_life > 1.f) inv_life = 1.f;
 	red_rectangle.setFillColor(sf::Color(255, 0, 0, (sf::Uint8)(inv_life*255.f)));
@@ -146,7 +147,7 @@ void GameMainLoop::processEvent(sf::Event event)
 		// this is so silly and i don't know why i did that, but i'm zorem.
 		if (event.key.code == sf::Keyboard::Return)
 		{
-			data.hero->try_throw_grenade();
+			data->hero->try_throw_grenade();
                         // FIXME: WHY IS THIS HERE IT MAKES NO SENSE
 		}
 		else if (event.key.code == sf::Keyboard::Escape) 
@@ -220,14 +221,14 @@ bool GameMainLoop::update()
 	// life and red rectangle stuff
 	happyhealth->update(frameTime.asSeconds());
 
-	if (!data.hero->isDead())
+	if (!data->hero->isDead())
 	{
 		regenerate_cooldown.update(frameTime.asSeconds());
 	}
 
-	if (data.hero->getLife() < 1.0f && regenerate_cooldown.is_ready())
+	if (data->hero->getLife() < 1.0f && regenerate_cooldown.is_ready())
 	{
-		data.hero->addLife((*config)["life"]["regenerate"].as<float>() * frameTime.asSeconds());
+		data->hero->addLife((*config)["life"]["regenerate"].as<float>() * frameTime.asSeconds());
 		// happy indicator above hero's head
 		happyhealth->show(true);
 	} else {
@@ -265,7 +266,7 @@ bool GameMainLoop::update()
 	text_level.update(frameTime.asSeconds());
 
 	// determine if we should end the Loop
-	if (data.hero->isDead())
+	if (data->hero->isDead())
 	{
 		if (gameover_cooldown.update(frameTime.asSeconds()))
 		{
@@ -302,7 +303,7 @@ void GameMainLoop::draw()
 	window->setView(orig_view);
 
 	// red rectangle
-	if (!data.hero->isDead())
+	if (!data->hero->isDead())
 	{
 		window->draw(red_rectangle);
 	}
@@ -343,13 +344,13 @@ void GameMainLoop::onNotify(const std::string &message, boost::any data)
 	else if (message == "hero:got_shot")
 	{
 		regenerate_cooldown.lock();
-		this->data.hero->reduceLife( (*config)["life"]["got_shot"].as<float>() );
+		this->data->hero->reduceLife( (*config)["life"]["got_shot"].as<float>() );
 		scoreChange(-57);
-		if (this->data.hero->isDead())
+		if (this->data->hero->isDead())
 		{
 			endGame();
 		} else {
-			bloodExplosion(this->data.hero->getPosition());
+			bloodExplosion(this->data->hero->getPosition());
 		}
 	}
 }
@@ -361,7 +362,7 @@ void GameMainLoop::bloodExplosion(sf::Vector2f position, unsigned int how_many)
 
 void GameMainLoop::newLevel()
 {
-	data.ground->createRandom(Ground::CONTINUE);
+	data->ground->createRandom(Ground::CONTINUE);
 	// YOU! DON'T CLEAR THE `actors` YOU! THEY HAVE THE HERO INSTANCE ITSELF!
 	massShouldRemove(shots);
 	massShouldRemove(particles);
@@ -399,7 +400,7 @@ void GameMainLoop::newLevel()
 	// 	craters on ground
 	for (unsigned int i = 0; i < level; i++)
 	{
-		data.ground->crater(dist_int(random_gen), 44, 22.3f/240); // FIXME: hardcoded stuff :(
+		data->ground->crater(dist_int(random_gen), 44, 22.3f/240); // FIXME: hardcoded stuff :(
 	}
 
 	// 	enemies
@@ -407,7 +408,7 @@ void GameMainLoop::newLevel()
 	{
 		float x = dist_real(random_gen);
 
-		boost::shared_ptr<EnemySoldier> newguy(new EnemySoldier(config, &data));
+		boost::shared_ptr<EnemySoldier> newguy(new EnemySoldier(config, data));
 		newguy->setPosition(x, 0);
 		newguy->putOnGround();
 		newguy->setTexture(*(resources->getTexture((*config)["main_texture"].as<std::string>())));
@@ -415,7 +416,7 @@ void GameMainLoop::newLevel()
 		newguy->setOrigin(main_texture_subrect_selector.frame.x / 2.f,
 				main_texture_subrect_selector.frame.y / 2.f);
 		newguy->look(newguy->LEFT);
-		data.pubsub->subscribe("grenade:hits_ground", newguy);
+		data->pubsub->subscribe("grenade:hits_ground", newguy);
 
 		enemysoldiers.push_back(newguy);
 	}
@@ -429,14 +430,14 @@ void GameMainLoop::newGrenade()
 	// create a new grenade at hero
 	float ini_ix, ini_iy;
 	float x_fac = 1; // for negating all ix if facing LEFT
-	if (data.hero->getDirection() == Actor::LEFT)
+	if (data->hero->getDirection() == Actor::LEFT)
 	{
 		x_fac = -1;
 	}
 
 	ini_iy = (*config)["bombs"]["grenade"]["ini_iy"].as<float>();
 
-	if (data.hero->is_walking())
+	if (data->hero->is_walking())
 	{
 		ini_ix = (*config)["bombs"]["grenade"]["ini_ix_in_movement"].as<float>();
 	} else 	{
@@ -453,7 +454,7 @@ void GameMainLoop::newGrenade()
 	boost::shared_ptr<bk::Bomb> grenade(
 		new bk::Bomb(
 			config,
-			&data,
+			data,
 			(*config)["bombs"]["grenade"]["width"].as<float>(),
 			(*config)["bombs"]["grenade"]["depth"].as<float>(),
 			ini_ix, ini_iy, inc_rot,
@@ -462,7 +463,7 @@ void GameMainLoop::newGrenade()
 		)
 	);
 
-	sf::Vector2f pos = data.hero->getPosition();
+	sf::Vector2f pos = data->hero->getPosition();
 	pos.x += x_fac*(*config)["bombs"]["grenade"]["throw_position"][0].as<float>();
 	pos.y += (*config)["bombs"]["grenade"]["throw_position"][1].as<float>();
 	grenade->setPosition(pos);
@@ -470,7 +471,7 @@ void GameMainLoop::newGrenade()
 	boost::random::uniform_real_distribution<float> rotation(0.0f, 360.0f);
 	grenade->setRotation(rotation(random_gen));
 
-	data.pubsub->subscribe("map:new", grenade);
+	data->pubsub->subscribe("map:new", grenade);
 
 	actors.push_back(grenade);
 }
@@ -490,7 +491,7 @@ void GameMainLoop::newBomb()
 	boost::shared_ptr<bk::Bomb> bomb(
 		new bk::Bomb(
 			config,
-			&data,
+			data,
 			(*config)["bombs"]["bomb"]["width"].as<float>(),
 			(*config)["bombs"]["bomb"]["depth"].as<float>(),
 			ini_ix, ini_iy, 0,
@@ -511,7 +512,7 @@ void GameMainLoop::newBomb()
 	sf::Vector2f pos(x_dist(random_gen), (*config)["bombs"]["bomb"]["ini_y"].as<float>());
 	bomb->setPosition(pos);
 
-	data.pubsub->subscribe("map:new", bomb);
+	data->pubsub->subscribe("map:new", bomb);
 
 	// whistle!
 	bomb_soundstack.play( *(resources->getSoundBuffer( (*config)["sounds"]["whistle"].as<std::string>())) );
@@ -527,13 +528,13 @@ void GameMainLoop::onGrenadeHitGround(bk::Bomb *bomb)
 	float width = bomb->getWidth();
 	float depth = bomb->getDepth() / map_height;
 
-	data.ground->crater((unsigned int)pos.x, width, depth);
+	data->ground->crater((unsigned int)pos.x, width, depth);
 	ground_view->updateTexture();
 
 	// reduce score a bit :( if too near to hero
-	if (!data.hero->isDead())
+	if (!data->hero->isDead())
 	{
-		float dist_from_hero = fabs(data.hero->getPosition().x - pos.x);
+		float dist_from_hero = fabs(data->hero->getPosition().x - pos.x);
 		if (dist_from_hero < width/2.f)
 		{
 			scoreChange( -(int)((width/2.f - dist_from_hero)*4.2f) ); // FIXME: 4.2 should be in config. need to stop being lazy
@@ -632,11 +633,11 @@ void GameMainLoop::createExplosion(unsigned int how_many, sf::Vector2f origin, Y
 
 void GameMainLoop::endGame()
 {
-	sf::Vector2f hero_pos = data.hero->getPosition();
-	actors.remove(data.hero);
+	sf::Vector2f hero_pos = data->hero->getPosition();
+	actors.remove(data->hero);
 
 	// emit a lot of blood
-	boost::shared_ptr<ParticleEmitter> emitter(new ParticleEmitter(config, &data, &particles, ParticleEmitter::preset("blood")));
+	boost::shared_ptr<ParticleEmitter> emitter(new ParticleEmitter(config, data, &particles, ParticleEmitter::preset("blood")));
 	emitter->emitter_rate = 174.f;
 	emitter->emitter_life = 4.62f;
 	emitter->setPosition(hero_pos);
@@ -686,11 +687,12 @@ void GameMainLoop::cleanup()
 	particles.clear();
 
 	pubsub->unsubscribe_from_all(shared_from_this());
-	//data.hero = nullptr; // why do I comment this? why does this break when hero is dead? ahh fuck it! random programming is the best!
-	data.game = nullptr;
-	//data.ground = nullptr; // probably not needed, destroyed with game.
-	//data.pubsub = nullptr; // it's global anyway, so why null it? it confuses the bombs that should unsubscribe themselves.
-	//data.resources = nullptr; // also global. let's keep it.
+	//data->hero = nullptr; // why do I comment this? why does this break when hero is dead? ahh fuck it! random programming is the best!
+	//data->game = nullptr;
+	//data->ground = nullptr; // probably not needed, destroyed with game.
+	//data->pubsub = nullptr; // it's global anyway, so why null it? it confuses the bombs that should unsubscribe themselves.
+	//data->resources = nullptr; // also global. let's keep it.
+	delete data;
 }
 
 void massShouldRemove(const ActorList &actor_list)
