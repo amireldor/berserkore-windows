@@ -15,10 +15,8 @@ GameMainLoop::GameMainLoop(YAML::Node *n_config, sf::RenderWindow *n_window, Pub
 {
 }
 
-#include <iostream> // DEBUG
 GameMainLoop::~GameMainLoop()
 {
-std::cout << "cat bye" << std::endl;
 }
 
 void GameMainLoop::prepare()

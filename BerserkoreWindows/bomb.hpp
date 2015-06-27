@@ -12,7 +12,6 @@
 #include "commondata.hpp"
 #include "animationseq.hpp" // for AnimFrame
 
-#include <iostream> // DEBUG
 namespace bk
 {
 
@@ -31,8 +30,6 @@ public:
 		std::string n_sound_name=soundNameGrenade
 	);
 	CommonGameData *data;
-
-	~Bomb() { std::cout << "bye bye bomb" << std::endl; }
 
 	void update();
 

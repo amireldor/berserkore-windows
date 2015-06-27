@@ -30,7 +30,6 @@ Hero::Hero(YAML::Node *config, CommonGameData *data, float speed)
 
 Hero::~Hero()
 {
-	std::cout << "hero destructor" << std::endl;
 }
 
 void
