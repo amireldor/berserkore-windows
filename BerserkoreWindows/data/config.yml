@@ -17,7 +17,9 @@ windowed: [1200, 800]
 #screen: [600, 400]
 map: [320, 240]
 
-music: "berserkore_blue_sky_you_die.ogg"
+#music: "berserkore_blue_sky_you_die.ogg"
+#music: "berserkore_blue_sky_you_die2.ogg"
+music: ""
 
 go:
   speed: 31.3
