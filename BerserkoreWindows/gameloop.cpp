@@ -267,7 +267,7 @@ bool GameMainLoop::update()
 	{
 		if (gameover_cooldown.update(frameTime.asSeconds()))
 		{
-			return false;
+			please_end_loop = true;
 		}
 	}
 
