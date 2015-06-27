@@ -61,9 +61,6 @@ private:
 	bool walking;
 
 	float life;
-
-	SoundStack throw_sound_stack; // grenade throwing
-	sf::SoundBuffer throw_buffer; // why the hell are the sound buffers in `resources` shared_ptrs?
 };
 
 }

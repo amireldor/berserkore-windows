@@ -10,6 +10,7 @@ Hero::Hero(YAML::Node *config, CommonGameData *data, float speed)
 {
 	setTexture(*data->resources->getTexture((*config)["main_texture"].as<std::string>()));
 	throw_buffer = *data->resources->getSoundBuffer((*config)["sounds"]["throw"].as<std::string>());
+	throw_sound = sf::Sound(throw_buffer);
 
 	setupAnimation(config);
 
@@ -31,6 +32,7 @@ Hero::Hero(YAML::Node *config, CommonGameData *data, float speed)
 
 Hero::~Hero()
 {
+//	throw_sound.resetBuffer();
 	std::cout << "hero destructor" << std::endl;
 }
 
@@ -81,7 +83,8 @@ Hero::try_throw_grenade()
 	if (!isDead() && grenade_cooldown.is_ready())
 	{
 		grenade_cooldown.lock();
-		throw_sound_stack.play(throw_buffer);
+		//throw_sound_stack.play(throw_buffer);
+		throw_sound.play();
 		data->pubsub->publish("grenade:new");
 		return true;
 	}
