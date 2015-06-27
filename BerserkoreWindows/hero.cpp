@@ -9,8 +9,6 @@ Hero::Hero(YAML::Node *config, CommonGameData *data, float speed)
   : Soldier(config, data), life(1.0f)
 {
 	setTexture(*data->resources->getTexture((*config)["main_texture"].as<std::string>()));
-	throw_buffer = *data->resources->getSoundBuffer((*config)["sounds"]["throw"].as<std::string>());
-	throw_sound = sf::Sound(throw_buffer);
 
 	setupAnimation(config);
 
@@ -32,7 +30,6 @@ Hero::Hero(YAML::Node *config, CommonGameData *data, float speed)
 
 Hero::~Hero()
 {
-//	throw_sound.resetBuffer();
 	std::cout << "hero destructor" << std::endl;
 }
 
