@@ -1,4 +1,5 @@
 #include <boost/foreach.hpp>
+#include <boost/make_shared.hpp>
 #include "gameloop.hpp"
 #include "go.hpp"
 #include "particleemitter.hpp"
@@ -59,11 +60,7 @@ void GameMainLoop::prepare()
 	Actor::setGravity((*config)["gravity"].as<float>());
 
 	// Hero
-	data->hero = boost::shared_ptr<Hero>(new Hero(
-		config,
-		data,
-		(*config)["hero"]["speed"].as<float>()
-	));
+	data->hero = boost::make_shared<Hero>(config, data, (*config)["hero"]["speed"].as<float>());
 
 	data->hero->setPosition((map_width * 0.44f), 0); // the Y is calculated in main loop
 	actors.push_back(data->hero);
