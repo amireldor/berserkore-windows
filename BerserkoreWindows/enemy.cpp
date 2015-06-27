@@ -19,10 +19,8 @@ EnemySoldier::EnemySoldier(YAML::Node *config, CommonGameData *data)
 	fire_start_stop_cooldown.lock();
 }
 
-#include <iostream>
 EnemySoldier::~EnemySoldier()
 {
-	std::cout << "enemy out" << std::endl;
 }
 
 void EnemySoldier::update()

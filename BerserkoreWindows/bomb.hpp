@@ -12,8 +12,7 @@
 #include "commondata.hpp"
 #include "animationseq.hpp" // for AnimFrame
 
-#include <iostream> // remove, it's debug stuff
-
+#include <iostream> // DEBUG
 namespace bk
 {
 
@@ -31,8 +30,9 @@ public:
 		AnimFrame textureFrame=textureGrenade,
 		std::string n_sound_name=soundNameGrenade
 	);
-	~Bomb() { std::cout << "bomb destructor" << std::endl; }
 	CommonGameData *data;
+
+	~Bomb() { std::cout << "bye bye bomb" << std::endl; }
 
 	void update();
 

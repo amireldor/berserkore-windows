@@ -2,7 +2,6 @@
 
 using namespace bk;
 
-Listener::Listener(int group)
+Listener::Listener()
 {
-	this->group = group;
 }

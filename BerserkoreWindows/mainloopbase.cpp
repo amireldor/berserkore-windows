@@ -9,7 +9,7 @@ MainLoopBase::MainLoopBase(YAML::Node *n_config, sf::RenderWindow *n_window, Pub
 	window(n_window),
 	pubsub(n_pubsub),
 	resources(n_resource),
-	next_loop(NULL)
+	next_loop(nullptr)
 {
 }
 
@@ -20,7 +20,7 @@ float MainLoopBase::rand_zero_to_one()
 
 void MainLoopBase::prepare()
 {
-	random_gen.seed((uint32_t)std::time(NULL));
+	random_gen.seed((uint32_t)std::time(nullptr));
 	main_texture_subrect_selector.frame = sf::Vector2u(
 		(*config)["images"]["hero"]["frame"]["size"][0].as<unsigned int>(),
 		(*config)["images"]["hero"]["frame"]["size"][1].as<unsigned int>()

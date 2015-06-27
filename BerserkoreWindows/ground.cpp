@@ -12,7 +12,7 @@ Ground::Ground(unsigned int size)
 {
 	this->data = boost::shared_array<float>(new float[size]);
 	this->size = size;
-	random_gen.seed(std::time(NULL));
+	random_gen.seed(std::time(nullptr));
 }
 
 Ground::~Ground()
@@ -76,7 +76,7 @@ GroundView::GroundView(Ground* ptr,
 	// TODO: consider lazy-init
 	texture.create(width, height);
 	sprite.setTexture(texture);
-	random_gen.seed(std::time(NULL));
+	random_gen.seed(std::time(nullptr));
 }
 
 GroundView::~GroundView()

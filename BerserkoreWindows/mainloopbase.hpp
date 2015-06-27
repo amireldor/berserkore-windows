@@ -11,7 +11,6 @@
 #include "texturerectselector.hpp"
 #include "resourcemanager.hpp"
 
-#include <iostream> // REMOVE it was debug
 namespace bk
 {
 
@@ -20,8 +19,6 @@ class PubSub;
 struct MainLoopBase
 {
 	MainLoopBase(YAML::Node *n_config, sf::RenderWindow *n_window, PubSub *n_pubsub, ResourcePointer n_resource);
-
-	virtual ~MainLoopBase() { std::cout << "a loop ended" << std::endl; }
 
 	virtual void prepare(); // you should call it if you subclass it. really.
 

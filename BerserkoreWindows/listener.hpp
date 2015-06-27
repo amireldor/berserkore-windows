@@ -9,10 +9,9 @@ namespace bk
 class Listener
 {
 public:
-	Listener(int group = 0);
+	Listener();
 
 	virtual void onNotify(const std::string &message, boost::any data) = 0;
-	int group;
 };
 
 }

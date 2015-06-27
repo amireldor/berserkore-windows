@@ -32,7 +32,6 @@ Shot::advanceWithFPS(float amount)
 	advance(amount * getFps().asSeconds());
 }
 
-#include <iostream>
 void
 Shot::update()
 {

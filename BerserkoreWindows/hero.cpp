@@ -28,16 +28,15 @@ Hero::Hero(YAML::Node *config, CommonGameData *data, float speed)
 	this->walking = false;
 }
 
-#include <iostream>
+
 Hero::~Hero()
 {
-	std::cout << "hero destructor" << std::endl;
 }
 
 void
 Hero::setupAnimation(YAML::Node *config)
 {
-	if (walk_anim_frames == NULL)
+	if (walk_anim_frames == nullptr)
 	{
 		walk_anim_frames = boost::shared_ptr< std::vector<AnimFrame> >( new std::vector<AnimFrame> );
 	}

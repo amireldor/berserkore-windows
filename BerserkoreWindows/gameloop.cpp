@@ -14,9 +14,10 @@ GameMainLoop::GameMainLoop(YAML::Node *n_config, sf::RenderWindow *n_window, Pub
 {
 }
 
+#include <iostream> // DEBUG
 GameMainLoop::~GameMainLoop()
 {
-	std::cout << "byebye"<<std::endl;
+std::cout << "cat bye" << std::endl;
 }
 
 void GameMainLoop::prepare()
@@ -35,13 +36,13 @@ void GameMainLoop::prepare()
 	ground_view->updateTexture();
 
 	data.pubsub = MainLoopBase::pubsub;
-	data.pubsub->subscribe("map:new", shared_from_this(), 1);
-	data.pubsub->subscribe("grenade:new", shared_from_this(), 1);
-	data.pubsub->subscribe("grenade:hits_ground", shared_from_this(), 1);
-	data.pubsub->subscribe("shot:new", shared_from_this(), 1);
-	data.pubsub->subscribe("enemy:tango_down", shared_from_this(), 1);
-	data.pubsub->subscribe("hero:got_shot", shared_from_this(), 1);
-	//data.pubsub->subscribe("hero:dead", shared_from_this(), 1);
+	data.pubsub->subscribe("map:new", shared_from_this());
+	data.pubsub->subscribe("grenade:new", shared_from_this());
+	data.pubsub->subscribe("grenade:hits_ground", shared_from_this());
+	data.pubsub->subscribe("shot:new", shared_from_this());
+	data.pubsub->subscribe("enemy:tango_down", shared_from_this());
+	data.pubsub->subscribe("hero:got_shot", shared_from_this());
+	//data.pubsub->subscribe("hero:dead", shared_from_this());
 
 	please_end_loop = false;
 
@@ -110,7 +111,7 @@ void GameMainLoop::prepare()
 
 	// the Go banner
 	boost::shared_ptr<Go> go(new Go(config));
-	data.pubsub->subscribe("map:new", go, 1);
+	data.pubsub->subscribe("map:new", go);
 	go->setTexture(*resources->getTexture((*config)["go"]["texture"].as<std::string>()));
 	actors.push_back(go);
 
@@ -127,11 +128,6 @@ void GameMainLoop::prepare()
 
 	// death sound, i don't feel like lazy-loading it when dead
 	death_sound = sf::Sound( *resources->getSoundBuffer((*config)["death"]["sound"].as<std::string>()) );
-
-
-	// TODO remove temp debug
-	std::cout << "particle count at PREPARE: " << particles.size() << std::endl;
-
 }
 
 void GameMainLoop::calculateRedRectangleFill()
@@ -367,9 +363,7 @@ void GameMainLoop::newLevel()
 {
 	data.ground->createRandom(Ground::CONTINUE);
 	// YOU! DON'T CLEAR THE `actors` YOU! THEY HAVE THE HERO INSTANCE ITSELF!
-	std::cout << "mass remove shots:" << std::endl;
 	massShouldRemove(shots);
-	std::cout << "mass remove particles:" << std::endl;
 	massShouldRemove(particles);
 	shots.clear();
 	particles.clear();
@@ -399,7 +393,6 @@ void GameMainLoop::newLevel()
 	// create per-level stuff
 	boost::random::uniform_int_distribution<int> dist_int(0, map_width-1);
 	boost::random::uniform_real_distribution<float> dist_real(0, map_width-1.0f);
-	std::cout << "mass remove soldiers:" << std::endl;
 	massShouldRemove(enemysoldiers);
 	enemysoldiers.clear();
 
@@ -422,7 +415,7 @@ void GameMainLoop::newLevel()
 		newguy->setOrigin(main_texture_subrect_selector.frame.x / 2.f,
 				main_texture_subrect_selector.frame.y / 2.f);
 		newguy->look(newguy->LEFT);
-		data.pubsub->subscribe("grenade:hits_ground", newguy, 1);
+		data.pubsub->subscribe("grenade:hits_ground", newguy);
 
 		enemysoldiers.push_back(newguy);
 	}
@@ -477,7 +470,7 @@ void GameMainLoop::newGrenade()
 	boost::random::uniform_real_distribution<float> rotation(0.0f, 360.0f);
 	grenade->setRotation(rotation(random_gen));
 
-	data.pubsub->subscribe("map:new", grenade, 1);
+	data.pubsub->subscribe("map:new", grenade);
 
 	actors.push_back(grenade);
 }
@@ -518,7 +511,7 @@ void GameMainLoop::newBomb()
 	sf::Vector2f pos(x_dist(random_gen), (*config)["bombs"]["bomb"]["ini_y"].as<float>());
 	bomb->setPosition(pos);
 
-	data.pubsub->subscribe("map:new", bomb, 1);
+	data.pubsub->subscribe("map:new", bomb);
 
 	// whistle!
 	bomb_soundstack.play( *(resources->getSoundBuffer( (*config)["sounds"]["whistle"].as<std::string>())) );
@@ -637,12 +630,10 @@ void GameMainLoop::createExplosion(unsigned int how_many, sf::Vector2f origin, Y
 	}
 }
 
-//#include <iostream>
 void GameMainLoop::endGame()
 {
 	sf::Vector2f hero_pos = data.hero->getPosition();
 	actors.remove(data.hero);
-//	std::cout << "use ocunt: " << data.hero.use_count() << std::endl;
 
 	// emit a lot of blood
 	boost::shared_ptr<ParticleEmitter> emitter(new ParticleEmitter(config, &data, &particles, ParticleEmitter::preset("blood")));
@@ -653,14 +644,6 @@ void GameMainLoop::endGame()
 	actors.push_back(emitter);
 
 	death_sound.play();
-
-//	bomb_soundstack.releaseAll(); // this is stupid coz sounds are created after death as well
-//	shot_soundstack.releaseAll();
-
-	// notify others that this game loop is considered finished
-	//pubsub->publish("loop:over"); // no sir, it's not used (yet?)
-
-	//pubsub->clear(); // remove references to enemies and everything
 
 	next_loop = boost::shared_ptr<MainLoopBase>(LoopFactory::create(LoopFactory::DEATH, config, window, pubsub, resources));
 
@@ -692,62 +675,26 @@ void GameMainLoop::scoreChange(int change)
 
 void GameMainLoop::cleanup()
 {
-	//pubsub->clear_group(1);
-	//pubsub->clear_all();
-
-	std::cout << "actors: " << std::endl;
 	massShouldRemove(actors);
-	std::cout << "shots: " << std::endl;
 	massShouldRemove(shots);
-	std::cout << "enemy soldiers: " << std::endl;
 	massShouldRemove(enemysoldiers);
-	std::cout << "particles: " << std::endl;
 	massShouldRemove(particles);
 
 	actors.clear();
 	shots.clear();
 	enemysoldiers.clear();
 	particles.clear();
-	/*
-	ListenersList all_listeners;
-	all_listeners.insert(all_listeners.end(), enemysoldiers.begin(), enemysoldiers.end());
-	all_listeners.insert(all_listeners.end(), shots.begin(), shots.end());
-	all_listeners.insert(all_listeners.end(), bombs.begin(), bombs.end());
-	all_listeners.push_back(go_actor);
-	all_listeners.push_back(shared_from_this());
-	*/
 
-#if 0
-	// some manual cleaning
-	ActorList::iterator actor;
-	actor = actors.begin();
-	while (actor != actors.end()) {
-		actor = actors.erase(actor);
-	}
-	actor = shots.begin();
-	while (actor != shots.end()) {
-		actor = shots.erase(actor);
-	}
-	actor = enemysoldiers.begin();
-	while (actor != enemysoldiers.end()) {
-		actor = enemysoldiers.erase(actor);
-	}
-	/*
-	actors.clear();
-	shots.clear();
-	enemysoldiers.clear();*/
-#endif
 	pubsub->unsubscribe_from_all(shared_from_this());
-	//data.hero = NULL; // why do I comment this? why does this break when hero is dead? ahh fuck it! random programming is the best!
-	data.game = NULL;
-	data.ground = NULL;
-	data.pubsub = NULL;
-	data.resources = NULL;
+	//data.hero = nullptr; // why do I comment this? why does this break when hero is dead? ahh fuck it! random programming is the best!
+	data.game = nullptr;
+	//data.ground = nullptr; // probably not needed, destroyed with game.
+	//data.pubsub = nullptr; // it's global anyway, so why null it? it confuses the bombs that should unsubscribe themselves.
+	//data.resources = nullptr; // also global. let's keep it.
 }
 
 void massShouldRemove(const ActorList &actor_list)
 {
-	std::cout << "clearing smt #" << actor_list.size() << std::endl;
 	BOOST_FOREACH( boost::shared_ptr<Actor> actor, actor_list )
 	{
 		actor->shouldRemove();

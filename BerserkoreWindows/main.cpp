@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 	{
 		current_loop = bk::LoopFactory::create(bk::LoopFactory::WELCOME, &config, &window, &main_pubsub, resources);
 	}
-	if (current_loop == NULL) {
+	if (current_loop == nullptr) {
 		// we are not a welcome loop, we are nothing
 		current_loop = bk::LoopFactory::create(bk::LoopFactory::GAME, &config, &window, &main_pubsub, resources);
 	}
@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
 			loop_continue = current_loop->update();
 			if (!loop_continue)
 			{
-				if (current_loop->next_loop != NULL) {
+				if (current_loop->next_loop != nullptr) {
 					current_loop = current_loop->next_loop;
 					current_loop->prepare();
 					continue;
