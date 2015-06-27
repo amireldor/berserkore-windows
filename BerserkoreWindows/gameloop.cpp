@@ -126,6 +126,7 @@ void GameMainLoop::prepare()
 
 	// death sound, i don't feel like lazy-loading it when dead
 	death_sound = sf::Sound( *resources->getSoundBuffer((*config)["death"]["sound"].as<std::string>()) );
+	throw_sound = sf::Sound( *resources->getSoundBuffer((*config)["sounds"]["throw"].as<std::string>()) );
 }
 
 void GameMainLoop::calculateRedRectangleFill()
@@ -471,6 +472,7 @@ void GameMainLoop::newGrenade()
 	data->pubsub->subscribe("map:new", grenade);
 
 	actors.push_back(grenade);
+	throw_sound.play();
 }
 
 void GameMainLoop::newBomb()

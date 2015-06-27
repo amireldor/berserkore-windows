@@ -89,6 +89,7 @@ private:
 	TextInput textinput;
 
 	sf::Sound death_sound;
+	sf::Sound throw_sound; // grenade
 
 	int score;
 	float score_factor; // read from config, adjusts the 'overall score' highness

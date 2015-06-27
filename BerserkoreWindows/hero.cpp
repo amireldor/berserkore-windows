@@ -80,8 +80,6 @@ Hero::try_throw_grenade()
 	if (!isDead() && grenade_cooldown.is_ready())
 	{
 		grenade_cooldown.lock();
-		//throw_sound_stack.play(throw_buffer);
-		throw_sound.play();
 		data->pubsub->publish("grenade:new");
 		return true;
 	}
