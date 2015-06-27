@@ -24,7 +24,7 @@ namespace po = boost::program_options;
 int main(int argc, char *argv[])
 {
 	std::cout << "Berserkore!" << std::endl;
-	std::cout << "Version: Garua" << std::endl;
+	std::cout << "Version: Haroos" << std::endl;
 
 	std::string config_file_path;
 
