@@ -16,3 +16,5 @@ stuff. I use SFML, YAML, and Boost. These are certainly an overkill for this kin
 when this project began. But it's a nice learning experience.
 
 I can't think of anything else to write now. So goodbye.
+
+**Note from 2016** - The Berserkore executable seems to be working under Linux with Wine without much (or any) effort. Also, uf not removed for some reason, a **Windows build should be here: http://eize.ninja/d/berserkore-windows.7z**.
